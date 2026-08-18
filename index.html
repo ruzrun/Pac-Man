@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -15,6 +16,7 @@
         rel="stylesheet"
         href="pacman.css"
     >
+
 </head>
 
 <body>
@@ -30,15 +32,23 @@
             <h1>OARADHI</h1>
 
             <div class="pacman-logo">
-                <span class="logo-pacman">●</span>
+
+                <span class="logo-pacman"></span>
+
                 <span>PAC-MAN</span>
+
             </div>
 
             <p class="subtitle">
                 Choose your map
             </p>
 
-            <div id="mapList" class="map-list"></div>
+
+            <div
+                id="mapList"
+                class="map-list"
+            ></div>
+
 
             <button
                 id="playButton"
@@ -64,6 +74,7 @@
             <div class="game-header">
 
                 <div class="score-section">
+
                     <span class="label">
                         SCORE
                     </span>
@@ -71,13 +82,16 @@
                     <span id="score">
                         0
                     </span>
+
                 </div>
 
 
                 <div class="map-name">
+
                     <span id="currentMap">
                         OARADHI
                     </span>
+
                 </div>
 
 
@@ -96,6 +110,8 @@
             </div>
 
 
+            <!-- GAME -->
+
             <div class="game-wrapper">
 
                 <canvas
@@ -107,7 +123,7 @@
 
 
             <p id="gameMessage">
-                Use arrow keys or WASD
+                Use arrow keys, WASD, or swipe ✨
             </p>
 
 
@@ -120,6 +136,7 @@
                 >
                     🗺️ Maps
                 </button>
+
 
                 <button
                     id="restartButton"
