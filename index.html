@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>OARADHI PAC-MAN</title>
+
+    <link
+        rel="stylesheet"
+        href="pacman.css"
+    >
+</head>
+
+<body>
+
+    <main class="game-container">
+
+        <!-- =========================
+             MAP SELECTION
+        ========================== -->
+
+        <section id="mapScreen" class="screen">
+
+            <h1>OARADHI</h1>
+
+            <div class="pacman-logo">
+                <span class="logo-pacman">●</span>
+                <span>PAC-MAN</span>
+            </div>
+
+            <p class="subtitle">
+                Choose your map
+            </p>
+
+            <div id="mapList" class="map-list"></div>
+
+            <button
+                id="playButton"
+                class="main-button"
+                type="button"
+                disabled
+            >
+                PLAY ▶
+            </button>
+
+        </section>
+
+
+        <!-- =========================
+             GAME SCREEN
+        ========================== -->
+
+        <section
+            id="gameScreen"
+            class="screen hidden"
+        >
+
+            <div class="game-header">
+
+                <div class="score-section">
+                    <span class="label">
+                        SCORE
+                    </span>
+
+                    <span id="score">
+                        0
+                    </span>
+                </div>
+
+
+                <div class="map-name">
+                    <span id="currentMap">
+                        OARADHI
+                    </span>
+                </div>
+
+
+                <div class="lives-section">
+
+                    <span class="label">
+                        LIVES
+                    </span>
+
+                    <span id="lives">
+                        ❤️❤️❤️
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="game-wrapper">
+
+                <canvas
+                    id="gameCanvas"
+                    aria-label="OARADHI PAC-MAN game"
+                ></canvas>
+
+            </div>
+
+
+            <p id="gameMessage">
+                Use arrow keys or WASD
+            </p>
+
+
+            <div class="game-actions">
+
+                <button
+                    id="backButton"
+                    class="small-button"
+                    type="button"
+                >
+                    🗺️ Maps
+                </button>
+
+                <button
+                    id="restartButton"
+                    class="small-button"
+                    type="button"
+                >
+                    🔄 Restart
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="pacman.js"></script>
+
+</body>
+
+</html>
