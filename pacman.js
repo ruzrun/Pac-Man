@@ -1,7 +1,6 @@
 /* =========================================================
    OARADHI PAC-MAN
-   VERSION 1
-   MAP SELECTION + GAME FRAMEWORK
+   WORD MAZE VERSION
 ========================================================= */
 
 
@@ -27,8 +26,11 @@ const backButton =
 const restartButton =
     document.getElementById("restartButton");
 
-const gameCanvas =
+const canvas =
     document.getElementById("gameCanvas");
+
+const ctx =
+    canvas.getContext("2d");
 
 const scoreDisplay =
     document.getElementById("score");
@@ -42,13 +44,29 @@ const currentMapDisplay =
 const gameMessage =
     document.getElementById("gameMessage");
 
-const ctx =
-    gameCanvas.getContext("2d");
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+const COLS = 28;
+
+const ROWS = 15;
+
+const TILE = 24;
 
 
 /* =========================================================
-   MAP DATA
+   MAPS
 ========================================================= */
+
+/*
+    # = wall
+    . = dot
+    space = empty path
+    P = player spawn
+    G = ghost area
+*/
 
 const MAPS = {
 
@@ -57,19 +75,42 @@ const MAPS = {
         name: "OARADHI",
 
         description:
-            "Classic balanced maze",
+            "The OARADHI maze",
 
-        accent: "#ffd91a",
+        accent:
+            "#123cff",
 
         layout: [
 
-            "#########",
-            "#.......#",
-            "#.###.###",
-            "#.......#",
-            "###.#.###",
-            "#.......#",
-            "#########"
+            "############################",
+
+            "#............##............#",
+
+            "#.####.#####.##.#####.####.#",
+
+            "#.#  #.#   #....#   #.#  #.#",
+
+            "#.#  #.#   ######   #.#  #.#",
+
+            "#.####.#####.##.#####.####.#",
+
+            "#..........................#",
+
+            "###.##.###.######.###.##.###",
+
+            "#....#....#  GG  #....#....#",
+
+            "###.##.###.######.###.##.###",
+
+            "#..........................#",
+
+            "#.####.#####.##.#####.####.#",
+
+            "#.#  #.#   #....#   #.#  #.#",
+
+            "#..........................#",
+
+            "############################"
 
         ]
 
@@ -83,17 +124,40 @@ const MAPS = {
         description:
             "Symmetrical and tricky",
 
-        accent: "#ff72c8",
+        accent:
+            "#ff38a8",
 
         layout: [
 
-            "#########",
-            "#...#...#",
-            "#.#.#.#.#",
-            "#.......#",
-            "###.#.###",
-            "#.......#",
-            "#########"
+            "############################",
+
+            "#..........................#",
+
+            "#.###.###.######.###.###..#",
+
+            "#.#...#.#........#.#...#..#",
+
+            "#.#.###.####..####.###.#..#",
+
+            "#.#....................#..#",
+
+            "#.######.########.######..#",
+
+            "#........#  GG  #..........#",
+
+            "#.######.########.######..#",
+
+            "#.#....................#..#",
+
+            "#.#.###.####..####.###.#..#",
+
+            "#.#...#.#........#.#...#..#",
+
+            "#.###.###.######.###.###..#",
+
+            "#..........................#",
+
+            "############################"
 
         ]
 
@@ -107,17 +171,40 @@ const MAPS = {
         description:
             "Fast and open",
 
-        accent: "#4facfe",
+        accent:
+            "#168cff",
 
         layout: [
 
-            "#########",
-            "#.......#",
-            "#.#####.#",
-            "#.......#",
-            "#.#####.#",
-            "#.......#",
-            "#########"
+            "############################",
+
+            "#..........................#",
+
+            "#.######.##########.######.#",
+
+            "#.#......................#.#",
+
+            "#.#.####.##########.####.#.#",
+
+            "#.#.#................#.#.#.#",
+
+            "#.#.#.####..GG..####.#.#.#",
+
+            "#...#................#...#.#",
+
+            "#.#.#.####......####.#.#.#",
+
+            "#.#.#................#.#.#.#",
+
+            "#.#.####.##########.####.#.#",
+
+            "#.#......................#.#",
+
+            "#.######.##########.######.#",
+
+            "#..........................#",
+
+            "############################"
 
         ]
 
@@ -131,17 +218,40 @@ const MAPS = {
         description:
             "Compact and dangerous",
 
-        accent: "#43e97b",
+        accent:
+            "#28d66f",
 
         layout: [
 
-            "#########",
-            "#.#...#.#",
-            "#.......#",
-            "###.#.###",
-            "#.......#",
-            "#.#...#.#",
-            "#########"
+            "############################",
+
+            "#..##......##......##......#",
+
+            "#..##.####.##.####.##.####.#",
+
+            "#....#....#....#....#.....#",
+
+            "####.#.##.####.##.####.####",
+
+            "#....#.................#...#",
+
+            "#.######.####GG####.######.#",
+
+            "#..........................#",
+
+            "#.######.####..####.######.#",
+
+            "#...#.................#....#",
+
+            "####.####.##.####.##.####.#",
+
+            "#.....#....#....#....#....#",
+
+            "#.####.##.####.##.####.##.#",
+
+            "#..........................#",
+
+            "############################"
 
         ]
 
@@ -151,20 +261,74 @@ const MAPS = {
 
 
 /* =========================================================
-   GAME STATE
+   STATE
 ========================================================= */
 
 let selectedMap = null;
 
 let currentMap = null;
 
+let board = [];
+
 let score = 0;
 
 let lives = 3;
 
+let gameRunning = false;
+
+let animationFrame = null;
+
 
 /* =========================================================
-   CREATE MAP MENU
+   PLAYER
+========================================================= */
+
+const player = {
+
+    x: 1,
+
+    y: 1,
+
+    direction: "right",
+
+    nextDirection: "right",
+
+    speed: 7
+
+};
+
+
+/* =========================================================
+   DIRECTION
+========================================================= */
+
+const DIRECTIONS = {
+
+    up: {
+        x: 0,
+        y: -1
+    },
+
+    down: {
+        x: 0,
+        y: 1
+    },
+
+    left: {
+        x: -1,
+        y: 0
+    },
+
+    right: {
+        x: 1,
+        y: 0
+    }
+
+};
+
+
+/* =========================================================
+   MAP MENU
 ========================================================= */
 
 function createMapMenu() {
@@ -243,6 +407,12 @@ function createMapPreview(layout) {
     preview.className =
         "map-preview";
 
+    preview.style.gridTemplateColumns =
+        `repeat(${COLS}, 1fr)`;
+
+    preview.style.gridTemplateRows =
+        `repeat(${ROWS}, 1fr)`;
+
 
     layout.forEach(row => {
 
@@ -300,10 +470,10 @@ function createMapPreview(layout) {
    SELECT MAP
 ========================================================= */
 
-function selectMap(mapName) {
+function selectMap(name) {
 
     selectedMap =
-        MAPS[mapName];
+        MAPS[name];
 
 
     document
@@ -312,13 +482,14 @@ function selectMap(mapName) {
 
             card.classList.toggle(
                 "selected",
-                card.dataset.map === mapName
+                card.dataset.map === name
             );
 
         });
 
 
-    playButton.disabled = false;
+    playButton.disabled =
+        false;
 
 }
 
@@ -342,139 +513,165 @@ function startGame() {
 
     lives = 3;
 
-
-    scoreDisplay.textContent =
-        score;
-
-
-    livesDisplay.textContent =
-        "❤️❤️❤️";
+    gameRunning = true;
 
 
     currentMapDisplay.textContent =
         currentMap.name;
 
 
+    scoreDisplay.textContent =
+        score;
+
+
+    updateLives();
+
+
     mapScreen.classList.add(
         "hidden"
     );
-
 
     gameScreen.classList.remove(
         "hidden"
     );
 
 
-    gameMessage.textContent =
-        "Use arrow keys, WASD, or swipe ✨";
+    loadMap();
 
 
     resizeCanvas();
 
-    drawPlaceholderMaze();
-
-}
-
-
-/* =========================================================
-   RETURN TO MAPS
-========================================================= */
-
-function showMapScreen() {
-
-    gameScreen.classList.add(
-        "hidden"
-    );
-
-
-    mapScreen.classList.remove(
-        "hidden"
-    );
-
-}
-
-
-/* =========================================================
-   RESTART
-========================================================= */
-
-function restartGame() {
-
-    score = 0;
-
-    lives = 3;
-
-
-    scoreDisplay.textContent =
-        score;
-
-
-    livesDisplay.textContent =
-        "❤️❤️❤️";
-
 
     gameMessage.textContent =
-        "Use arrow keys, WASD, or swipe ✨";
+        "Swipe or use the arrow keys ✨";
 
 
-    drawPlaceholderMaze();
+    startLoop();
 
 }
 
 
 /* =========================================================
-   CANVAS SIZE
+   LOAD MAP
+========================================================= */
+
+function loadMap() {
+
+    board =
+        currentMap.layout.map(
+            row => [...row]
+        );
+
+
+    findPlayerSpawn();
+
+
+    player.direction =
+        "right";
+
+    player.nextDirection =
+        "right";
+
+}
+
+
+/* =========================================================
+   PLAYER SPAWN
+========================================================= */
+
+function findPlayerSpawn() {
+
+    /*
+        We intentionally place the player
+        at the first safe corridor.
+    */
+
+    for (
+        let y = 0;
+        y < ROWS;
+        y++
+    ) {
+
+        for (
+            let x = 0;
+            x < COLS;
+            x++
+        ) {
+
+            if (
+                board[y][x] === "."
+            ) {
+
+                player.x =
+                    x;
+
+                player.y =
+                    y;
+
+                board[y][x] =
+                    " ";
+
+                return;
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   CANVAS
 ========================================================= */
 
 function resizeCanvas() {
 
-    const size =
-        Math.min(
-            gameCanvas.parentElement.clientWidth,
-            700
-        );
+    const width =
+        canvas.clientWidth;
+
+    const height =
+        width *
+        ROWS /
+        COLS;
 
 
-    const pixelRatio =
+    const ratio =
         window.devicePixelRatio || 1;
 
 
-    gameCanvas.width =
-        size * pixelRatio;
+    canvas.width =
+        width * ratio;
+
+    canvas.height =
+        height * ratio;
 
 
-    gameCanvas.height =
-        size * pixelRatio;
-
-
-    gameCanvas.style.width =
-        `${size}px`;
-
-
-    gameCanvas.style.height =
-        `${size}px`;
+    canvas.style.height =
+        `${height}px`;
 
 
     ctx.setTransform(
-        pixelRatio,
+        ratio,
         0,
         0,
-        pixelRatio,
+        ratio,
         0,
         0
     );
 
 
-    drawPlaceholderMaze();
+    draw();
 
 }
 
 
 /* =========================================================
-   DRAW CURRENT MAP
+   DRAW
 ========================================================= */
 
-function drawPlaceholderMaze() {
+function draw() {
 
     if (!currentMap) {
         return;
@@ -482,10 +679,17 @@ function drawPlaceholderMaze() {
 
 
     const width =
-        gameCanvas.clientWidth;
+        canvas.clientWidth;
 
     const height =
-        gameCanvas.clientHeight;
+        canvas.clientHeight;
+
+
+    const tileWidth =
+        width / COLS;
+
+    const tileHeight =
+        height / ROWS;
 
 
     ctx.clearRect(
@@ -496,28 +700,8 @@ function drawPlaceholderMaze() {
     );
 
 
-    const layout =
-        currentMap.layout;
-
-
-    const rows =
-        layout.length;
-
-    const columns =
-        layout[0].length;
-
-
-    const cellWidth =
-        width / columns;
-
-    const cellHeight =
-        height / rows;
-
-
-    /* Background */
-
     ctx.fillStyle =
-        "#03030d";
+        "#000";
 
     ctx.fillRect(
         0,
@@ -527,69 +711,50 @@ function drawPlaceholderMaze() {
     );
 
 
-    /* Maze */
+    /* =========================================
+       WALLS + DOTS
+    ========================================= */
 
     for (
-        let row = 0;
-        row < rows;
-        row++
+        let y = 0;
+        y < ROWS;
+        y++
     ) {
 
         for (
-            let col = 0;
-            col < columns;
-            col++
+            let x = 0;
+            x < COLS;
+            x++
         ) {
 
-            const character =
-                layout[row][col];
-
-
-            const x =
-                col * cellWidth;
-
-            const y =
-                row * cellHeight;
+            const tile =
+                board[y][x];
 
 
             if (
-                character === "#"
+                tile === "#"
             ) {
 
-                ctx.fillStyle =
-                    currentMap.accent;
-
-                ctx.fillRect(
-                    x + 2,
-                    y + 2,
-                    cellWidth - 4,
-                    cellHeight - 4
+                drawWall(
+                    x,
+                    y,
+                    tileWidth,
+                    tileHeight
                 );
 
             }
 
 
             else if (
-                character === "."
+                tile === "."
             ) {
 
-                ctx.fillStyle =
-                    "#ffffff";
-
-                ctx.beginPath();
-
-                ctx.arc(
-                    x + cellWidth / 2,
-                    y + cellHeight / 2,
-                    Math.max(
-                        2,
-                        cellWidth * 0.06
-                    ),
-                    0,
-                    Math.PI * 2
+                drawDot(
+                    x,
+                    y,
+                    tileWidth,
+                    tileHeight
                 );
-
-                ctx.fill();
 
             }
 
@@ -598,39 +763,440 @@ function drawPlaceholderMaze() {
     }
 
 
-    /* Temporary player */
+    /* =========================================
+       PLAYER
+    ========================================= */
 
-    const playerX =
-        4 * cellWidth +
-        cellWidth / 2;
+    drawPlayer(
+        tileWidth,
+        tileHeight
+    );
 
-    const playerY =
-        3 * cellHeight +
-        cellHeight / 2;
+}
+
+
+/* =========================================================
+   WALL
+========================================================= */
+
+function drawWall(
+    x,
+    y,
+    width,
+    height
+) {
+
+    const px =
+        x * width;
+
+    const py =
+        y * height;
+
+
+    ctx.strokeStyle =
+        currentMap.accent;
+
+    ctx.lineWidth =
+        Math.max(
+            2,
+            width * 0.12
+        );
+
+
+    ctx.strokeRect(
+        px + width * 0.16,
+        py + height * 0.16,
+        width * 0.68,
+        height * 0.68
+    );
+
+}
+
+
+/* =========================================================
+   DOT
+========================================================= */
+
+function drawDot(
+    x,
+    y,
+    width,
+    height
+) {
+
+    ctx.fillStyle =
+        "#fff";
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+        x * width + width / 2,
+        y * height + height / 2,
+        Math.max(
+            1.5,
+            width * 0.07
+        ),
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.fill();
+
+}
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+function drawPlayer(
+    width,
+    height
+) {
+
+    const px =
+        player.x * width +
+        width / 2;
+
+    const py =
+        player.y * height +
+        height / 2;
+
+
+    const radius =
+        Math.min(
+            width,
+            height
+        ) * 0.36;
+
+
+    let rotation = 0;
+
+
+    if (
+        player.direction === "right"
+    ) {
+
+        rotation = 0;
+
+    }
+
+    else if (
+        player.direction === "down"
+    ) {
+
+        rotation =
+            Math.PI / 2;
+
+    }
+
+    else if (
+        player.direction === "left"
+    ) {
+
+        rotation =
+            Math.PI;
+
+    }
+
+    else if (
+        player.direction === "up"
+    ) {
+
+        rotation =
+            -Math.PI / 2;
+
+    }
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        px,
+        py
+    );
+
+
+    ctx.rotate(
+        rotation
+    );
 
 
     ctx.fillStyle =
         "#ffd91a";
 
+
     ctx.beginPath();
 
-    ctx.arc(
-        playerX,
-        playerY,
-        Math.min(
-            cellWidth,
-            cellHeight
-        ) * 0.35,
-        0.25,
-        Math.PI * 2 - 0.25
+
+    ctx.moveTo(
+        0,
+        0
     );
 
-    ctx.lineTo(
-        playerX,
-        playerY
+
+    ctx.arc(
+        0,
+        0,
+        radius,
+        0.35,
+        Math.PI * 2 - 0.35
     );
+
+
+    ctx.closePath();
+
 
     ctx.fill();
+
+
+    ctx.restore();
+
+}
+
+
+/* =========================================================
+   MOVEMENT
+========================================================= */
+
+function movePlayer() {
+
+    if (!gameRunning) {
+        return;
+    }
+
+
+    const next =
+        DIRECTIONS[
+            player.nextDirection
+        ];
+
+
+    if (
+        canMove(
+            player.x + next.x,
+            player.y + next.y
+        )
+    ) {
+
+        player.direction =
+            player.nextDirection;
+
+    }
+
+
+    const direction =
+        DIRECTIONS[
+            player.direction
+        ];
+
+
+    const newX =
+        player.x +
+        direction.x;
+
+    const newY =
+        player.y +
+        direction.y;
+
+
+    if (
+        canMove(
+            newX,
+            newY
+        )
+    ) {
+
+        player.x =
+            newX;
+
+        player.y =
+            newY;
+
+
+        collectDot();
+
+    }
+
+}
+
+
+/* =========================================================
+   CAN MOVE
+========================================================= */
+
+function canMove(
+    x,
+    y
+) {
+
+    if (
+        x < 0 ||
+        x >= COLS ||
+        y < 0 ||
+        y >= ROWS
+    ) {
+
+        return false;
+
+    }
+
+
+    return board[y][x] !== "#";
+
+}
+
+
+/* =========================================================
+   COLLECT DOT
+========================================================= */
+
+function collectDot() {
+
+    if (
+        board[player.y][player.x] === "."
+    ) {
+
+        board[player.y][player.x] =
+            " ";
+
+
+        score += 10;
+
+
+        scoreDisplay.textContent =
+            score;
+
+
+        checkDots();
+
+    }
+
+}
+
+
+/* =========================================================
+   CHECK DOTS
+========================================================= */
+
+function checkDots() {
+
+    for (
+        let y = 0;
+        y < ROWS;
+        y++
+    ) {
+
+        for (
+            let x = 0;
+            x < COLS;
+            x++
+        ) {
+
+            if (
+                board[y][x] === "."
+            ) {
+
+                return;
+
+            }
+
+        }
+
+    }
+
+
+    gameMessage.textContent =
+        "MAP CLEARED! ✨";
+
+
+    gameRunning =
+        false;
+
+}
+
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+let lastMove =
+    0;
+
+
+function startLoop() {
+
+    cancelAnimationFrame(
+        animationFrame
+    );
+
+
+    lastMove =
+        performance.now();
+
+
+    function loop(time) {
+
+        if (!gameRunning) {
+
+            draw();
+
+            return;
+
+        }
+
+
+        if (
+            time - lastMove >
+            130
+        ) {
+
+            movePlayer();
+
+            lastMove =
+                time;
+
+        }
+
+
+        draw();
+
+
+        animationFrame =
+            requestAnimationFrame(
+                loop
+            );
+
+    }
+
+
+    animationFrame =
+        requestAnimationFrame(
+            loop
+        );
+
+}
+
+
+/* =========================================================
+   DIRECTION INPUT
+========================================================= */
+
+function setDirection(
+    direction
+) {
+
+    if (!gameRunning) {
+        return;
+    }
+
+
+    player.nextDirection =
+        direction;
 
 }
 
@@ -647,69 +1213,55 @@ document.addEventListener(
             event.key.toLowerCase();
 
 
-        const validKeys = [
-
-            "arrowup",
-            "arrowdown",
-            "arrowleft",
-            "arrowright",
-
-            "w",
-            "a",
-            "s",
-            "d"
-
-        ];
-
-
         if (
-            validKeys.includes(key)
+            key === "arrowup" ||
+            key === "w"
         ) {
 
             event.preventDefault();
 
+            setDirection("up");
 
-            handleDirection(
-                key
-            );
+        }
+
+
+        else if (
+            key === "arrowdown" ||
+            key === "s"
+        ) {
+
+            event.preventDefault();
+
+            setDirection("down");
+
+        }
+
+
+        else if (
+            key === "arrowleft" ||
+            key === "a"
+        ) {
+
+            event.preventDefault();
+
+            setDirection("left");
+
+        }
+
+
+        else if (
+            key === "arrowright" ||
+            key === "d"
+        ) {
+
+            event.preventDefault();
+
+            setDirection("right");
 
         }
 
     }
 );
-
-
-/* =========================================================
-   DIRECTION
-========================================================= */
-
-function handleDirection(key) {
-
-    const directions = {
-
-        arrowup: "up",
-        w: "up",
-
-        arrowdown: "down",
-        s: "down",
-
-        arrowleft: "left",
-        a: "left",
-
-        arrowright: "right",
-        d: "right"
-
-    };
-
-
-    const direction =
-        directions[key];
-
-
-    gameMessage.textContent =
-        `Moving ${direction} ✨`;
-
-}
 
 
 /* =========================================================
@@ -723,7 +1275,7 @@ let touchStartY = 0;
 let touchStartTime = 0;
 
 
-gameCanvas.addEventListener(
+canvas.addEventListener(
     "touchstart",
     event => {
 
@@ -747,7 +1299,7 @@ gameCanvas.addEventListener(
 );
 
 
-gameCanvas.addEventListener(
+canvas.addEventListener(
     "touchmove",
     event => {
 
@@ -760,7 +1312,7 @@ gameCanvas.addEventListener(
 );
 
 
-gameCanvas.addEventListener(
+canvas.addEventListener(
     "touchend",
     event => {
 
@@ -791,7 +1343,7 @@ gameCanvas.addEventListener(
 
 
         if (
-            distance < 25 ||
+            distance < 20 ||
             duration > 1000
         ) {
 
@@ -800,34 +1352,52 @@ gameCanvas.addEventListener(
         }
 
 
-        let direction;
-
-
         if (
             Math.abs(deltaX) >
             Math.abs(deltaY)
         ) {
 
-            direction =
+            if (
                 deltaX > 0
-                    ? "right"
-                    : "left";
+            ) {
+
+                setDirection(
+                    "right"
+                );
+
+            }
+
+            else {
+
+                setDirection(
+                    "left"
+                );
+
+            }
 
         }
 
         else {
 
-            direction =
+            if (
                 deltaY > 0
-                    ? "down"
-                    : "up";
+            ) {
+
+                setDirection(
+                    "down"
+                );
+
+            }
+
+            else {
+
+                setDirection(
+                    "up"
+                );
+
+            }
 
         }
-
-
-        handleDirection(
-            direction
-        );
 
     },
     {
@@ -837,7 +1407,80 @@ gameCanvas.addEventListener(
 
 
 /* =========================================================
-   BUTTONS
+   LIVES
+========================================================= */
+
+function updateLives() {
+
+    livesDisplay.textContent =
+        "❤️".repeat(lives);
+
+}
+
+
+/* =========================================================
+   BACK
+========================================================= */
+
+backButton.addEventListener(
+    "click",
+    () => {
+
+        gameRunning =
+            false;
+
+
+        cancelAnimationFrame(
+            animationFrame
+        );
+
+
+        gameScreen.classList.add(
+            "hidden"
+        );
+
+
+        mapScreen.classList.remove(
+            "hidden"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+restartButton.addEventListener(
+    "click",
+    () => {
+
+        score = 0;
+
+        lives = 3;
+
+        scoreDisplay.textContent =
+            score;
+
+        updateLives();
+
+        loadMap();
+
+        gameRunning =
+            true;
+
+        gameMessage.textContent =
+            "Swipe or use the arrow keys ✨";
+
+        startLoop();
+
+    }
+);
+
+
+/* =========================================================
+   PLAY
 ========================================================= */
 
 playButton.addEventListener(
@@ -846,17 +1489,9 @@ playButton.addEventListener(
 );
 
 
-backButton.addEventListener(
-    "click",
-    showMapScreen
-);
-
-
-restartButton.addEventListener(
-    "click",
-    restartGame
-);
-
+/* =========================================================
+   RESIZE
+========================================================= */
 
 window.addEventListener(
     "resize",
