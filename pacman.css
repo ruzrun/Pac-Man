@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url(
+    'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'
+);
 
 
 /* =========================================================
@@ -6,9 +8,13 @@
 ========================================================= */
 
 * {
+
     margin: 0;
+
     padding: 0;
+
     box-sizing: border-box;
+
 }
 
 
@@ -29,12 +35,7 @@ body {
     padding: 20px;
 
     background:
-        radial-gradient(
-            circle at center,
-            #151545 0%,
-            #080820 55%,
-            #03030d 100%
-        );
+        #000;
 
     color: white;
 
@@ -45,28 +46,25 @@ body {
     overflow-x: hidden;
 
     overscroll-behavior: none;
+
 }
 
 
 /* =========================================================
-   GAME CONTAINER
+   CONTAINER
 ========================================================= */
 
 .game-container {
 
     width: 100%;
 
-    max-width: 850px;
-
-    min-height: 600px;
+    max-width: 900px;
 
     display: flex;
 
     justify-content: center;
 
     align-items: center;
-
-    position: relative;
 
 }
 
@@ -85,7 +83,9 @@ body {
 
 
 .hidden {
+
     display: none !important;
+
 }
 
 
@@ -98,26 +98,26 @@ h1 {
     font-size:
         clamp(
             2.5rem,
-            8vw,
+            9vw,
             5rem
         );
 
     color: #ffd91a;
 
-    letter-spacing: 4px;
+    letter-spacing: 5px;
+
+    margin-bottom: 18px;
 
     text-shadow:
         0 0 5px #ffd91a,
         0 0 15px #ffd91a,
-        0 0 35px rgba(255, 217, 26, 0.5);
-
-    margin-bottom: 20px;
+        0 0 30px #ffd91a;
 
 }
 
 
 /* =========================================================
-   PACMAN LOGO
+   LOGO
 ========================================================= */
 
 .pacman-logo {
@@ -130,16 +130,16 @@ h1 {
 
     gap: 14px;
 
-    font-size:
-        clamp(
-            1rem,
-            3vw,
-            1.5rem
-        );
-
     color: white;
 
-    margin-bottom: 35px;
+    font-size:
+        clamp(
+            12px,
+            3vw,
+            18px
+        );
+
+    margin-bottom: 30px;
 
 }
 
@@ -150,13 +150,9 @@ h1 {
 
     height: 28px;
 
-    display: inline-block;
-
     border-radius: 50%;
 
     background: #ffd91a;
-
-    color: transparent;
 
     position: relative;
 
@@ -177,11 +173,14 @@ h1 {
 
     height: 0;
 
-    border-top: 9px solid transparent;
+    border-top:
+        9px solid transparent;
 
-    border-bottom: 9px solid transparent;
+    border-bottom:
+        9px solid transparent;
 
-    border-left: 13px solid #080820;
+    border-left:
+        13px solid #000;
 
 }
 
@@ -192,9 +191,9 @@ h1 {
 
 .subtitle {
 
-    color: #f5d76e;
+    font-size: 11px;
 
-    font-size: 12px;
+    color: #aaa;
 
     margin-bottom: 25px;
 
@@ -209,16 +208,17 @@ h1 {
 
     width: 100%;
 
+    max-width: 700px;
+
+    margin:
+        0 auto 30px;
+
     display: grid;
 
     grid-template-columns:
         repeat(2, 1fr);
 
     gap: 18px;
-
-    max-width: 650px;
-
-    margin: 0 auto 30px;
 
 }
 
@@ -229,37 +229,31 @@ h1 {
 
 .map-card {
 
-    position: relative;
-
-    padding: 16px;
-
-    border:
-        2px solid
-        rgba(255, 255, 255, 0.15);
-
-    border-radius: 12px;
+    padding: 14px;
 
     background:
-        rgba(255, 255, 255, 0.04);
+        #050505;
+
+    border:
+        2px solid #222;
+
+    border-radius: 8px;
 
     cursor: pointer;
 
     transition:
-        transform 0.2s ease,
-        border-color 0.2s ease,
-        background 0.2s ease,
-        box-shadow 0.2s ease;
+        0.2s ease;
 
 }
 
 
 .map-card:hover {
 
-    transform:
-        translateY(-4px);
-
     border-color:
-        rgba(255, 217, 26, 0.7);
+        #ffd91a;
+
+    transform:
+        translateY(-3px);
 
 }
 
@@ -269,24 +263,18 @@ h1 {
     border-color:
         #ffd91a;
 
-    background:
-        rgba(255, 217, 26, 0.08);
-
     box-shadow:
-        0 0 20px
-        rgba(255, 217, 26, 0.25);
-
-    transform:
-        translateY(-4px);
+        0 0 18px
+        rgba(255, 217, 26, 0.35);
 
 }
 
 
 .map-card h2 {
 
-    font-size: 13px;
+    font-size: 12px;
 
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 
     color: #ffd91a;
 
@@ -299,7 +287,7 @@ h1 {
 
     font-size: 12px;
 
-    color: rgba(255,255,255,0.7);
+    color: #888;
 
     margin-top: 10px;
 
@@ -314,46 +302,36 @@ h1 {
 
     width: 100%;
 
-    aspect-ratio: 1.5 / 1;
+    aspect-ratio: 2 / 1;
 
     display: grid;
 
-    grid-template-columns:
-        repeat(9, 1fr);
-
-    grid-template-rows:
-        repeat(7, 1fr);
-
-    gap: 2px;
-
-    padding: 5px;
-
-    background: #05051b;
+    background: #000;
 
     border:
-        2px solid
-        #1b48ff;
+        2px solid #123cff;
 
-    border-radius: 5px;
+    padding: 4px;
 
 }
 
 
+/* =========================================================
+   PREVIEW
+========================================================= */
+
 .preview-wall {
 
-    background: #1648ff;
+    background:
+        #123cff;
 
 }
 
 
 .preview-path {
 
-    background: #05051b;
-
-}
-
-
-.preview-dot {
+    background:
+        #000;
 
     position: relative;
 
@@ -364,15 +342,15 @@ h1 {
 
     content: "";
 
+    position: absolute;
+
     width: 3px;
 
     height: 3px;
 
-    background: #fff;
-
     border-radius: 50%;
 
-    position: absolute;
+    background: #fff;
 
     left: 50%;
 
@@ -385,7 +363,7 @@ h1 {
 
 
 /* =========================================================
-   BUTTONS
+   BUTTON
 ========================================================= */
 
 .main-button,
@@ -395,75 +373,51 @@ h1 {
         'Press Start 2P',
         monospace;
 
-    color: #ffd91a;
-
-    background: #080820;
-
-    border:
-        2px solid
-        #ffd91a;
-
-    border-radius: 8px;
-
     cursor: pointer;
 
+    background: #000;
+
+    color: #ffd91a;
+
+    border:
+        2px solid #ffd91a;
+
+    border-radius: 6px;
+
     transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        box-shadow 0.2s ease;
+        0.2s ease;
 
 }
 
 
 .main-button {
 
-    padding: 16px 28px;
+    padding:
+        15px 25px;
 
-    font-size: 13px;
+    font-size: 12px;
 
 }
 
 
 .main-button:hover:not(:disabled) {
 
-    transform:
-        scale(1.05);
+    background: #ffd91a;
 
-    background:
-        #ffd91a;
-
-    color: #080820;
+    color: #000;
 
     box-shadow:
         0 0 20px
-        rgba(255,217,26,0.5);
+        rgba(255, 217, 26, 0.5);
 
 }
 
 
 .main-button:disabled {
 
-    opacity: 0.35;
+    opacity: 0.3;
 
     cursor: not-allowed;
-
-}
-
-
-.small-button {
-
-    padding: 10px 14px;
-
-    font-size: 9px;
-
-}
-
-
-.small-button:hover {
-
-    background: #ffd91a;
-
-    color: #080820;
 
 }
 
@@ -474,12 +428,12 @@ h1 {
 
 .game-header {
 
-    width: min(
-        100%,
-        700px
-    );
+    width: 100%;
 
-    margin: 0 auto 15px;
+    max-width: 780px;
+
+    margin:
+        0 auto 12px;
 
     display: grid;
 
@@ -498,7 +452,7 @@ h1 {
 
     flex-direction: column;
 
-    gap: 8px;
+    gap: 7px;
 
 }
 
@@ -519,50 +473,45 @@ h1 {
 
 .label {
 
-    font-size: 8px;
+    font-size: 7px;
 
-    color:
-        rgba(255,255,255,0.55);
+    color: #777;
 
 }
 
 
 #score {
 
-    color: #ffd91a;
+    font-size: 15px;
 
-    font-size: 16px;
+    color: #ffd91a;
 
 }
 
 
 #lives {
 
-    font-size: 13px;
+    font-size: 12px;
 
 }
 
 
 .map-name {
 
-    color: #ffd91a;
+    font-size: 10px;
 
-    font-size: 11px;
+    color: #ffd91a;
 
 }
 
 
 /* =========================================================
-   GAME CANVAS
+   GAME
 ========================================================= */
 
 .game-wrapper {
 
     width: 100%;
-
-    max-width: 700px;
-
-    margin: auto;
 
     display: flex;
 
@@ -575,23 +524,20 @@ h1 {
 
     width: 100%;
 
-    max-width: 700px;
+    max-width: 780px;
 
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 28 / 15;
 
     display: block;
 
-    background: #03030d;
+    background: #000;
 
     border:
-        3px solid
-        #1648ff;
-
-    border-radius: 8px;
+        3px solid #1010ff;
 
     box-shadow:
         0 0 25px
-        rgba(22,72,255,0.35);
+        rgba(20, 30, 255, 0.35);
 
     touch-action: none;
 
@@ -602,20 +548,29 @@ h1 {
 }
 
 
+/* =========================================================
+   MESSAGE
+========================================================= */
+
 #gameMessage {
 
-    min-height: 30px;
+    min-height: 25px;
 
-    margin: 15px;
+    margin:
+        13px 0;
 
     color: #ffd91a;
 
-    font-size: 9px;
+    font-size: 8px;
 
-    line-height: 1.6;
+    line-height: 1.7;
 
 }
 
+
+/* =========================================================
+   ACTIONS
+========================================================= */
 
 .game-actions {
 
@@ -628,6 +583,25 @@ h1 {
 }
 
 
+.small-button {
+
+    padding:
+        9px 12px;
+
+    font-size: 8px;
+
+}
+
+
+.small-button:hover {
+
+    background: #ffd91a;
+
+    color: #000;
+
+}
+
+
 /* =========================================================
    MOBILE
 ========================================================= */
@@ -635,12 +609,13 @@ h1 {
 @media (max-width: 600px) {
 
     body {
-        padding: 12px;
-    }
 
+        padding: 10px;
 
-    .game-container {
-        min-height: auto;
+        align-items: flex-start;
+
+        padding-top: 35px;
+
     }
 
 
@@ -650,8 +625,6 @@ h1 {
             1fr;
 
         max-width: 420px;
-
-        gap: 12px;
 
     }
 
@@ -663,37 +636,9 @@ h1 {
     }
 
 
-    .map-preview {
-
-        aspect-ratio: 2.2 / 1;
-
-    }
-
-
     .game-header {
 
-        margin-bottom: 10px;
-
-    }
-
-
-    #score {
-
-        font-size: 13px;
-
-    }
-
-
-    #lives {
-
-        font-size: 11px;
-
-    }
-
-
-    .map-name {
-
-        font-size: 9px;
+        margin-bottom: 8px;
 
     }
 
@@ -705,12 +650,47 @@ h1 {
     }
 
 
-    .small-button {
+    #score {
+
+        font-size: 12px;
+
+    }
+
+
+    #lives {
+
+        font-size: 10px;
+
+    }
+
+
+    .map-name {
 
         font-size: 8px;
 
+    }
+
+
+    #gameCanvas {
+
+        border-width: 2px;
+
+    }
+
+
+    #gameMessage {
+
+        font-size: 7px;
+
+    }
+
+
+    .small-button {
+
+        font-size: 7px;
+
         padding:
-            9px 10px;
+            8px 9px;
 
     }
 
@@ -718,15 +698,10 @@ h1 {
 
 
 /* =========================================================
-   VERY SMALL PHONES
+   SMALL PHONE
 ========================================================= */
 
 @media (max-width: 380px) {
-
-    body {
-        padding: 8px;
-    }
-
 
     h1 {
 
@@ -736,14 +711,7 @@ h1 {
     }
 
 
-    .map-card h2 {
-
-        font-size: 11px;
-
-    }
-
-
-    .map-card p {
+    .pacman-logo {
 
         font-size: 10px;
 
@@ -752,10 +720,10 @@ h1 {
 
     .main-button {
 
-        padding:
-            13px 20px;
+        font-size: 10px;
 
-        font-size: 11px;
+        padding:
+            12px 20px;
 
     }
 
