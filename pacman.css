@@ -1,6 +1,8 @@
-@import url(
-    'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'
-);
+/* =========================================================
+   FONT
+========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 
 /* =========================================================
@@ -8,729 +10,19 @@
 ========================================================= */
 
 * {
-
     margin: 0;
-
     padding: 0;
-
     box-sizing: border-box;
-
 }
 
 
 /* =========================================================
-   BODY
+   HTML / BODY
 ========================================================= */
-
-body {
-
-    min-height: 100vh;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    padding: 20px;
-
-    background:
-        #000;
-
-    color: white;
-
-    font-family:
-        'Press Start 2P',
-        monospace;
-
-    overflow-x: hidden;
-
-    overscroll-behavior: none;
-
-}
-
-
-/* =========================================================
-   CONTAINER
-========================================================= */
-
-.game-container {
-
-    width: 100%;
-
-    max-width: 900px;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-}
-
-
-/* =========================================================
-   SCREEN
-========================================================= */
-
-.screen {
-
-    width: 100%;
-
-    text-align: center;
-
-}
-
-
-.hidden {
-
-    display: none !important;
-
-}
-
-
-/* =========================================================
-   TITLE
-========================================================= */
-
-h1 {
-
-    font-size:
-        clamp(
-            2.5rem,
-            9vw,
-            5rem
-        );
-
-    color: #ffd91a;
-
-    letter-spacing: 5px;
-
-    margin-bottom: 18px;
-
-    text-shadow:
-        0 0 5px #ffd91a,
-        0 0 15px #ffd91a,
-        0 0 30px #ffd91a;
-
-}
-
-
-/* =========================================================
-   LOGO
-========================================================= */
-
-.pacman-logo {
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    gap: 14px;
-
-    color: white;
-
-    font-size:
-        clamp(
-            12px,
-            3vw,
-            18px
-        );
-
-    margin-bottom: 30px;
-
-}
-
-
-.logo-pacman {
-
-    width: 28px;
-
-    height: 28px;
-
-    border-radius: 50%;
-
-    background: #ffd91a;
-
-    position: relative;
-
-}
-
-
-.logo-pacman::after {
-
-    content: "";
-
-    position: absolute;
-
-    right: -2px;
-
-    top: 5px;
-
-    width: 0;
-
-    height: 0;
-
-    border-top:
-        9px solid transparent;
-
-    border-bottom:
-        9px solid transparent;
-
-    border-left:
-        13px solid #000;
-
-}
-
-
-/* =========================================================
-   SUBTITLE
-========================================================= */
-
-.subtitle {
-
-    font-size: 11px;
-
-    color: #aaa;
-
-    margin-bottom: 25px;
-
-}
-
-
-/* =========================================================
-   MAP LIST
-========================================================= */
-
-.map-list {
-
-    width: 100%;
-
-    max-width: 700px;
-
-    margin:
-        0 auto 30px;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 18px;
-
-}
-
-
-/* =========================================================
-   MAP CARD
-========================================================= */
-
-.map-card {
-
-    padding: 14px;
-
-    background:
-        #050505;
-
-    border:
-        2px solid #222;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    transition:
-        0.2s ease;
-
-}
-
-
-.map-card:hover {
-
-    border-color:
-        #ffd91a;
-
-    transform:
-        translateY(-3px);
-
-}
-
-
-.map-card.selected {
-
-    border-color:
-        #ffd91a;
-
-    box-shadow:
-        0 0 18px
-        rgba(255, 217, 26, 0.35);
-
-}
-
-
-.map-card h2 {
-
-    font-size: 12px;
-
-    margin-bottom: 10px;
-
-    color: #ffd91a;
-
-}
-
-
-.map-card p {
-
-    font-family: Arial, sans-serif;
-
-    font-size: 12px;
-
-    color: #888;
-
-    margin-top: 10px;
-
-}
-
-
-/* =========================================================
-   MINI MAP
-========================================================= */
-
-.map-preview {
-
-    width: 100%;
-
-    aspect-ratio: 2 / 1;
-
-    display: grid;
-
-    background: #000;
-
-    border:
-        2px solid #123cff;
-
-    padding: 4px;
-
-}
-
-
-/* =========================================================
-   PREVIEW
-========================================================= */
-
-.preview-wall {
-
-    background:
-        #123cff;
-
-}
-
-
-.preview-path {
-
-    background:
-        #000;
-
-    position: relative;
-
-}
-
-
-.preview-dot::after {
-
-    content: "";
-
-    position: absolute;
-
-    width: 3px;
-
-    height: 3px;
-
-    border-radius: 50%;
-
-    background: #fff;
-
-    left: 50%;
-
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%);
-
-}
-
-
-/* =========================================================
-   BUTTON
-========================================================= */
-
-.main-button,
-.small-button {
-
-    font-family:
-        'Press Start 2P',
-        monospace;
-
-    cursor: pointer;
-
-    background: #000;
-
-    color: #ffd91a;
-
-    border:
-        2px solid #ffd91a;
-
-    border-radius: 6px;
-
-    transition:
-        0.2s ease;
-
-}
-
-
-.main-button {
-
-    padding:
-        15px 25px;
-
-    font-size: 12px;
-
-}
-
-
-.main-button:hover:not(:disabled) {
-
-    background: #ffd91a;
-
-    color: #000;
-
-    box-shadow:
-        0 0 20px
-        rgba(255, 217, 26, 0.5);
-
-}
-
-
-.main-button:disabled {
-
-    opacity: 0.3;
-
-    cursor: not-allowed;
-
-}
-
-
-/* =========================================================
-   GAME HEADER
-========================================================= */
-
-.game-header {
-
-    width: 100%;
-
-    max-width: 780px;
-
-    margin:
-        0 auto 12px;
-
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr 1fr;
-
-    align-items: center;
-
-}
-
-
-.score-section,
-.lives-section {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 7px;
-
-}
-
-
-.score-section {
-
-    align-items: flex-start;
-
-}
-
-
-.lives-section {
-
-    align-items: flex-end;
-
-}
-
-
-.label {
-
-    font-size: 7px;
-
-    color: #777;
-
-}
-
-
-#score {
-
-    font-size: 15px;
-
-    color: #ffd91a;
-
-}
-
-
-#lives {
-
-    font-size: 12px;
-
-}
-
-
-.map-name {
-
-    font-size: 10px;
-
-    color: #ffd91a;
-
-}
-
-
-/* =========================================================
-   GAME
-========================================================= */
-
-.game-wrapper {
-
-    width: 100%;
-
-    display: flex;
-
-    justify-content: center;
-
-}
-
-
-#gameCanvas {
-
-    width: 100%;
-
-    max-width: 780px;
-
-    aspect-ratio: 28 / 15;
-
-    display: block;
-
-    background: #000;
-
-    border:
-        3px solid #1010ff;
-
-    box-shadow:
-        0 0 25px
-        rgba(20, 30, 255, 0.35);
-
-    touch-action: none;
-
-    user-select: none;
-
-    -webkit-user-select: none;
-
-}
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
-
-#gameMessage {
-
-    min-height: 25px;
-
-    margin:
-        13px 0;
-
-    color: #ffd91a;
-
-    font-size: 8px;
-
-    line-height: 1.7;
-
-}
-
-
-/* =========================================================
-   ACTIONS
-========================================================= */
-
-.game-actions {
-
-    display: flex;
-
-    justify-content: center;
-
-    gap: 12px;
-
-}
-
-
-.small-button {
-
-    padding:
-        9px 12px;
-
-    font-size: 8px;
-
-}
-
-
-.small-button:hover {
-
-    background: #ffd91a;
-
-    color: #000;
-
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 600px) {
-
-    body {
-
-        padding: 10px;
-
-        align-items: flex-start;
-
-        padding-top: 35px;
-
-    }
-
-
-    .map-list {
-
-        grid-template-columns:
-            1fr;
-
-        max-width: 420px;
-
-    }
-
-
-    .map-card {
-
-        padding: 12px;
-
-    }
-
-
-    .game-header {
-
-        margin-bottom: 8px;
-
-    }
-
-
-    .label {
-
-        font-size: 6px;
-
-    }
-
-
-    #score {
-
-        font-size: 12px;
-
-    }
-
-
-    #lives {
-
-        font-size: 10px;
-
-    }
-
-
-    .map-name {
-
-        font-size: 8px;
-
-    }
-
-
-    #gameCanvas {
-
-        border-width: 2px;
-
-    }
-
-
-    #gameMessage {
-
-        font-size: 7px;
-
-    }
-
-
-    .small-button {
-
-        font-size: 7px;
-
-        padding:
-            8px 9px;
-
-    }
-
-}
-
-
-/* =========================================================
-   SMALL PHONE
-========================================================= */
-
-@media (max-width: 380px) {
-
-    h1 {
-
-        font-size:
-            2.2rem;
-
-    }
-
-
-    .pacman-logo {
-
-        font-size: 10px;
-
-    }
-
-
-    .main-button {
-
-        font-size: 10px;
-
-        padding:
-            12px 20px;
-
-    }
-
-}
 
 html,
 body {
+
     width: 100%;
     height: 100%;
 
@@ -742,66 +34,785 @@ body {
     background: #000;
 
     touch-action: none;
+
+    overscroll-behavior: none;
+
 }
+
+
+/* =========================================================
+   BODY
+========================================================= */
 
 body {
+
     position: fixed;
+
     inset: 0;
-}
-
-#game {
-    width: 100vw;
-    height: 100dvh;
-
-    overflow: hidden;
 
     display: flex;
-    flex-direction: column;
+
     align-items: center;
-    justify-content: center;
-}
 
-#mazeWrapper {
-    width: min(92vw, 900px);
-    height: min(72vh, 520px);
-
-    aspect-ratio: 1.8 / 1;
-
-    display: flex;
-    align-items: center;
     justify-content: center;
 
-    overflow: hidden;
+    color: white;
+
+    font-family:
+        "Press Start 2P",
+        monospace;
+
 }
+
+
+/* =========================================================
+   ROTATE SCREEN
+========================================================= */
 
 #rotateScreen {
+
     display: none;
+
 }
 
-@media (orientation: portrait) and (max-width: 900px) {
+
+/* =========================================================
+   MAP SCREEN
+========================================================= */
+
+#mapScreen {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+    background: #000;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    overflow: hidden;
+
+}
+
+
+.map-header {
+
+    text-align: center;
+
+    margin-bottom: 20px;
+
+}
+
+
+.map-header h1 {
+
+    color: #ffe600;
+
+    font-size: clamp(
+        24px,
+        4vw,
+        48px
+    );
+
+    letter-spacing: 3px;
+
+    text-shadow:
+        0 0 5px #ffe600,
+        0 0 15px #ffe600;
+
+}
+
+
+.map-header h1 span {
+
+    color: #fff;
+
+}
+
+
+.map-header p {
+
+    margin-top: 16px;
+
+    color: #4d8dff;
+
+    font-size: clamp(
+        10px,
+        1.5vw,
+        16px
+    );
+
+}
+
+
+/* =========================================================
+   MAP OPTIONS
+========================================================= */
+
+#mapOptions {
+
+    width: 100%;
+
+    max-width: 1200px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+
+}
+
+
+.map-option {
+
+    appearance: none;
+
+    border: 2px solid #064cff;
+
+    background: #000;
+
+    padding: 7px;
+
+    cursor: pointer;
+
+    border-radius: 7px;
+
+    color: white;
+
+    font-family:
+        "Press Start 2P",
+        monospace;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+.map-option:hover {
+
+    transform:
+        translateY(-4px);
+
+}
+
+
+.map-option.selected {
+
+    border-color: #ffe600;
+
+    box-shadow:
+        0 0 8px #ffe600,
+        0 0 20px
+        rgba(255, 230, 0, 0.35);
+
+}
+
+
+.preview {
+
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+
+    background: #000;
+
+}
+
+
+.map-option span {
+
+    display: block;
+
+    padding:
+        10px 5px 7px;
+
+    font-size: 10px;
+
+    color: #ffe600;
+
+}
+
+
+.select-message {
+
+    margin-top: 18px;
+
+    color: #4d8dff;
+
+    font-size: 10px;
+
+}
+
+
+#playButton {
+
+    margin-top: 18px;
+
+    padding:
+        14px 35px;
+
+    background: #000;
+
+    border: 2px solid #4d8dff;
+
+    border-radius: 7px;
+
+    color: #ffe600;
+
+    font-family:
+        "Press Start 2P",
+        monospace;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 8px
+        rgba(77, 141, 255, 0.8);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+#playButton:hover {
+
+    transform: scale(1.05);
+
+    box-shadow:
+        0 0 20px
+        rgba(255, 230, 0, 0.7);
+
+}
+
+
+/* =========================================================
+   MAIN GAME
+========================================================= */
+
+#game {
+
+    width: 100vw;
+
+    height: 100dvh;
+
+    display: none;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    touch-action: none;
+
+}
+
+
+/* =========================================================
+   HUD
+========================================================= */
+
+.game-hud {
+
+    width: min(
+        94vw,
+        930px
+    );
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    margin-bottom: 8px;
+
+}
+
+
+.hud-left,
+.hud-right {
+
+    min-width: 130px;
+
+}
+
+
+.hud-left small,
+.hud-right small {
+
+    display: block;
+
+    color: white;
+
+    font-size: 9px;
+
+    margin-bottom: 7px;
+
+}
+
+
+.hud-left strong {
+
+    color: #ffe600;
+
+    font-size: 16px;
+
+}
+
+
+.hud-right {
+
+    text-align: right;
+
+}
+
+
+.hud-right strong {
+
+    font-size: 13px;
+
+    white-space: nowrap;
+
+}
+
+
+.map-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    color: #ffe600;
+
+    font-size: 18px;
+
+    text-shadow:
+        0 0 7px #ffe600;
+
+}
+
+
+.map-title span {
+
+    color: #4d8dff;
+
+}
+
+
+/* =========================================================
+   GAME WRAPPER
+========================================================= */
+
+#gameWrapper {
+
+    width: min(
+        94vw,
+        930px
+    );
+
+    aspect-ratio: 930 / 510;
+
+    max-height: 78vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    touch-action: none;
+
+}
+
+
+#gameCanvas {
+
+    display: block;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: #000;
+
+    touch-action: none;
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.game-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-top: 7px;
+
+}
+
+
+.game-footer span {
+
+    color: #064cff;
+
+}
+
+
+.game-footer p {
+
+    color: #4d8dff;
+
+    font-size: 8px;
+
+    text-align: center;
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.game-buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 9px;
+
+}
+
+
+.game-buttons button {
+
+    background: #000;
+
+    border: 1px solid #064cff;
+
+    color: #ffe600;
+
+    padding:
+        7px 12px;
+
+    border-radius: 5px;
+
+    font-family:
+        "Press Start 2P",
+        monospace;
+
+    font-size: 8px;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+   PORTRAIT MOBILE
+========================================================= */
+
+@media
+(orientation: portrait)
+and (max-width: 900px) {
+
+    #mapScreen {
+
+        display: none !important;
+
+    }
 
     #game {
-        display: none;
+
+        display: none !important;
+
     }
 
     #rotateScreen {
+
         position: fixed;
+
         inset: 0;
+
+        z-index: 99999;
 
         display: flex;
 
         align-items: center;
+
         justify-content: center;
 
         flex-direction: column;
 
-        background: #000;
-
-        color: white;
-
         text-align: center;
 
-        z-index: 99999;
+        background: #000;
+
+        padding: 30px;
+
+    }
+
+
+    .rotate-icon {
+
+        font-size: 60px;
+
+        margin-bottom: 25px;
+
+        animation:
+            rotatePhone
+            1.5s
+            ease-in-out
+            infinite;
+
+    }
+
+
+    #rotateScreen h2 {
+
+        color: #ffe600;
+
+        font-size: 18px;
+
+        line-height: 1.7;
+
+    }
+
+
+    #rotateScreen p {
+
+        color: #4d8dff;
+
+        font-size: 9px;
+
+        line-height: 2;
+
+        margin-top: 15px;
+
+    }
+
+}
+
+
+@keyframes rotatePhone {
+
+    0%,
+    100% {
+
+        transform:
+            rotate(0deg);
+
+    }
+
+    50% {
+
+        transform:
+            rotate(-25deg);
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL LANDSCAPE PHONES
+========================================================= */
+
+@media
+(orientation: landscape)
+and (max-height: 500px) {
+
+    .game-hud {
+
+        margin-bottom: 2px;
+
+    }
+
+
+    .hud-left,
+    .hud-right {
+
+        min-width: 100px;
+
+    }
+
+
+    .hud-left small,
+    .hud-right small {
+
+        font-size: 7px;
+
+        margin-bottom: 4px;
+
+    }
+
+
+    .hud-left strong {
+
+        font-size: 11px;
+
+    }
+
+
+    .hud-right strong {
+
+        font-size: 10px;
+
+    }
+
+
+    .map-title {
+
+        font-size: 12px;
+
+    }
+
+
+    #gameWrapper {
+
+        width: min(
+            94vw,
+            800px
+        );
+
+        max-height: 70vh;
+
+    }
+
+
+    .game-footer {
+
+        display: none;
+
+    }
+
+
+    .game-buttons {
+
+        margin-top: 3px;
+
+    }
+
+}
+
+
+/* =========================================================
+   MAP SCREEN MOBILE LANDSCAPE
+========================================================= */
+
+@media
+(orientation: landscape)
+and (max-height: 600px) {
+
+    #mapScreen {
+
+        padding: 8px;
+
+    }
+
+
+    .map-header {
+
+        margin-bottom: 8px;
+
+    }
+
+
+    .map-header h1 {
+
+        font-size: 20px;
+
+    }
+
+
+    .map-header p {
+
+        margin-top: 7px;
+
+        font-size: 8px;
+
+    }
+
+
+    #mapOptions {
+
+        max-width: 850px;
+
+        gap: 8px;
+
+    }
+
+
+    .map-option {
+
+        padding: 4px;
+
+    }
+
+
+    .map-option span {
+
+        padding:
+            5px 2px 3px;
+
+        font-size: 7px;
+
+    }
+
+
+    .select-message {
+
+        margin-top: 8px;
+
+        font-size: 7px;
+
+    }
+
+
+    #playButton {
+
+        margin-top: 8px;
+
+        padding:
+            9px 22px;
+
+        font-size: 12px;
+
     }
 
 }
