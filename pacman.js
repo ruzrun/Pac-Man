@@ -1552,13 +1552,13 @@ function drawMaze() {
     ctx.beginPath();
 
     ctx.moveTo(
-        16 * TILE,
-        15 * TILE
+        15 * TILE,
+        10 * TILE
     );
 
     ctx.lineTo(
         16 * TILE,
-        15 * TILE
+        10 * TILE
     );
 
     ctx.stroke();
