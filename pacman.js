@@ -641,8 +641,8 @@ function startGame() {
 
 function resetCharacters() {
 
-    pacman.x = 15.5;
-    pacman.y = 15.5;
+    pacman.x = 15;
+    pacman.y = 15;
 
     pacman.direction = "left";
     pacman.nextDirection = "left";
@@ -696,12 +696,12 @@ function createGhost(
 
     return {
 
-        x: x + 0.5,
-        y: y + 0.5,
+        x: x + 0,
+        y: y + 0,
 
         direction: direction,
 
-        speed: 5.2,
+        speed: 5,
 
         colour:
             ghostColours[index],
