@@ -325,8 +325,7 @@ function createMap(word) {
     addHorizontalWall(14, 2, 8);
     addHorizontalWall(14, 11, 20);
     addHorizontalWall(14, 23, 28);
-  addHorizontalWall(10, 15, 8);
-
+ 
 
     /* =====================================================
        VERTICAL WALLS
@@ -340,7 +339,7 @@ function createMap(word) {
     addVerticalWall(4, 10, 13);
     addVerticalWall(9, 12, 14);
     addVerticalWall(21, 12, 14);
-    addVerticalWall(26, 10, 14);
+    
     //addVerticalWall(15, 13, 14);
 
 
@@ -362,8 +361,8 @@ function createMap(word) {
        PACMAN START AREA
     ===================================================== */
 
-    maze[15][14] = " ";
-    maze[15][15] = " ";
+    //maze[15][14] = " ";
+    //maze[15][15] = " ";
     maze[15][16] = " ";
 
     maze[14][15] = " ";
