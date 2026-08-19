@@ -318,8 +318,8 @@ function createMap(word) {
     ===================================================== */
 
     addVerticalWall(4, 0, 0);
-    addVerticalWall(9, 1, 2);
-    addVerticalWall(21, 1, 2);
+    addVerticalWall(9, 2, 2);
+    addVerticalWall(21, 2, 2);
     addVerticalWall(26, 0, 0);//34
 
     addVerticalWall(4, 10, 13);
