@@ -325,7 +325,7 @@ function createMap(word) {
     addHorizontalWall(14, 2, 8);
     addHorizontalWall(14, 11, 20);
     addHorizontalWall(14, 23, 28);
-   // addHorizontalWall(10, 15, 8);
+  addHorizontalWall(10, 15, 8);
 
 
     /* =====================================================
@@ -341,7 +341,7 @@ function createMap(word) {
     addVerticalWall(9, 12, 14);
     addVerticalWall(21, 12, 14);
     addVerticalWall(26, 10, 14);
-    addVerticalWall(15, 13, 14);
+    //addVerticalWall(15, 13, 14);
 
 
     /* =====================================================
