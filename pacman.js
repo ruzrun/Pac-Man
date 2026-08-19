@@ -51,10 +51,24 @@ const MAP_NAMES = [
 const gameMusic = new Audio("audio/game.mp3"); 
 const levelMusic = new Audio("audio/level.mp3"); 
 const deathMusic = new Audio("audio/death.mp3"); 
-gameMusic.loop = true; 
-gameMusic.volume = 0.35; 
+
 levelMusic.volume = 0.6; 
 deathMusic.volume = 0.6;
+
+
+gameMusic.loop = true;
+
+gameMusic.play()
+.then(() => {
+console.log("Audio started successfully");
+})
+.catch((error) => {
+console.log(
+"Autoplay was blocked:",
+error
+);
+});
+
 
 
 /* =========================================================
