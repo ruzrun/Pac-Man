@@ -317,15 +317,15 @@ function createMap(word) {
        VERTICAL WALLS
     ===================================================== */
 
-    addVerticalWall(4, 3, 5);
+    addVerticalWall(4, 3, 4);
     addVerticalWall(9, 1, 2);
-    addVerticalWall(21, 1, 3);
-    addVerticalWall(26, 3, 5);
+    addVerticalWall(21, 1, 2);
+    addVerticalWall(26, 3, 4);
 
     addVerticalWall(4, 10, 13);
     addVerticalWall(9, 12, 14);
     addVerticalWall(21, 12, 14);
-    addVerticalWall(26, 10, 13);
+    addVerticalWall(26, 10, 14);
 
 
     /* =====================================================
