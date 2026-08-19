@@ -175,8 +175,8 @@ let lastTime = 0;
 
 const pacman = {
 
-    x: 15.5,
-    y: 15.5,
+    x: 15,
+    y: 15,
 
     direction: "left",
     nextDirection: "left",
@@ -317,10 +317,10 @@ function createMap(word) {
        VERTICAL WALLS
     ===================================================== */
 
-    addVerticalWall(4, 3, 4);
+    addVerticalWall(4, 0, 0);
     addVerticalWall(9, 1, 2);
     addVerticalWall(21, 1, 2);
-    addVerticalWall(26, 3, 4);
+    addVerticalWall(26, 0, 0);//34
 
     addVerticalWall(4, 10, 13);
     addVerticalWall(9, 12, 14);
