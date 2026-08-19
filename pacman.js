@@ -189,8 +189,8 @@ let lastTime = 0;
 
 const pacman = {
 
-    x: 15,
-    y: 15,
+    x: 15.5,
+    y: 15.5,
 
     direction: "left",
     nextDirection: "left",
@@ -580,7 +580,7 @@ function createGhostHouse() {
 
     /* DOOR */
 
-    maze[10][15] = " ";
+    //maze[10][15] = " ";
 
 }
 
@@ -641,8 +641,8 @@ function startGame() {
 
 function resetCharacters() {
 
-    pacman.x = 15;
-    pacman.y = 15;
+    pacman.x = 15.5;
+    pacman.y = 15.5;
 
     pacman.direction = "left";
     pacman.nextDirection = "left";
@@ -696,8 +696,8 @@ function createGhost(
 
     return {
 
-        x: x + 0,
-        y: y + 0,
+        x: x + 0.5,
+        y: y + 0.5,
 
         direction: direction,
 
