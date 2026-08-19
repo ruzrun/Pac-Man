@@ -7,10 +7,10 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     >
 
-    <title>OARADHI PAC-MAN</title>
+    <title>OARADHI Pac-Man</title>
 
     <link
         rel="stylesheet"
@@ -21,150 +21,235 @@
 
 <body>
 
+    <!-- =====================================================
+         PORTRAIT SCREEN
+    ====================================================== -->
+
     <div id="rotateScreen">
 
-    <div class="rotate-icon">
-        📱↻
+        <div class="rotate-icon">
+            📱↻
+        </div>
+
+        <h2>
+            ROTATE YOUR PHONE
+        </h2>
+
+        <p>
+            OARADHI PAC-MAN is made for landscape mode 🎮
+        </p>
+
     </div>
 
-    <h2>
-        Rotate Your Phone
-    </h2>
 
-    <p>
-        Pac-Man is made for landscape mode 🎮
-    </p>
+    <!-- =====================================================
+         MAP SELECT SCREEN
+    ====================================================== -->
 
-</div>
-    
-    <main class="game-container">
+    <div id="mapScreen">
 
-        <!-- =========================
-             MAP SELECTION
-        ========================== -->
+        <div class="map-header">
 
-        <section id="mapScreen" class="screen">
-
-            <h1>PAC MAN</h1>
-
-            <div class="pacman-logo">
-
-                <span class="logo-pacman"></span>
-
+            <h1>
+                OARADHI
                 <span>PAC-MAN</span>
+            </h1>
 
-            </div>
-
-            <p class="subtitle">
-                Choose your map
+            <p>
+                CHOOSE YOUR MAP
             </p>
 
+        </div>
 
-            <div
-                id="mapList"
-                class="map-list"
-            ></div>
+
+        <div id="mapOptions">
+
+            <button
+                class="map-option selected"
+                data-map="OARADHI"
+            >
+
+                <canvas
+                    class="preview"
+                    width="310"
+                    height="150"
+                    data-preview="OARADHI"
+                ></canvas>
+
+                <span>
+                    OARADHI
+                </span>
+
+            </button>
 
 
             <button
-                id="playButton"
-                class="main-button"
-                type="button"
-                disabled
+                class="map-option"
+                data-map="RADHIRA"
             >
-                PLAY ▶
-            </button>
-
-        </section>
-
-
-        <!-- =========================
-             GAME SCREEN
-        ========================== -->
-
-        <section
-            id="gameScreen"
-            class="screen hidden"
-        >
-
-            <div class="game-header">
-
-                <div class="score-section">
-
-                    <span class="label">
-                        SCORE
-                    </span>
-
-                    <span id="score">
-                        0
-                    </span>
-
-                </div>
-
-
-                <div class="map-name">
-
-                    <span id="currentMap">
-                        OARADHI
-                    </span>
-
-                </div>
-
-
-                <div class="lives-section">
-
-                    <span class="label">
-                        LIVES
-                    </span>
-
-                    <span id="lives">
-                        ❤️❤️❤️
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <!-- GAME -->
-
-            <div class="game-wrapper">
 
                 <canvas
-                    id="gameCanvas"
-                    aria-label="OARADHI PAC-MAN game"
+                    class="preview"
+                    width="310"
+                    height="150"
+                    data-preview="RADHIRA"
                 ></canvas>
 
+                <span>
+                    RADHIRA
+                </span>
+
+            </button>
+
+
+            <button
+                class="map-option"
+                data-map="RUZRUN"
+            >
+
+                <canvas
+                    class="preview"
+                    width="310"
+                    height="150"
+                    data-preview="RUZRUN"
+                ></canvas>
+
+                <span>
+                    RUZRUN
+                </span>
+
+            </button>
+
+
+            <button
+                class="map-option"
+                data-map="WARUN"
+            >
+
+                <canvas
+                    class="preview"
+                    width="310"
+                    height="150"
+                    data-preview="WARUN"
+                ></canvas>
+
+                <span>
+                    WARUN
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <p class="select-message">
+            SELECT A MAP AND PRESS PLAY
+        </p>
+
+
+        <button
+            id="playButton"
+        >
+            PLAY
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN GAME
+    ====================================================== -->
+
+    <main id="game">
+
+        <!-- TOP HUD -->
+
+        <div class="game-hud">
+
+            <div class="hud-left">
+
+                <small>
+                    SCORE
+                </small>
+
+                <strong id="score">
+                    0
+                </strong>
+
             </div>
 
 
-            <p id="gameMessage">
-                Use arrow keys, WASD, or swipe ✨
+            <div class="map-title">
+
+                <span>•</span>
+
+                <strong id="currentMap">
+                    OARADHI
+                </strong>
+
+                <span>•</span>
+
+            </div>
+
+
+            <div class="hud-right">
+
+                <small>
+                    LIVES
+                </small>
+
+                <strong id="lives">
+                    ❤️ ❤️ ❤️
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- CANVAS -->
+
+        <div id="gameWrapper">
+
+            <canvas
+                id="gameCanvas"
+                width="930"
+                height="510"
+            ></canvas>
+
+        </div>
+
+
+        <!-- BOTTOM -->
+
+        <div class="game-footer">
+
+            <span>
+                ─────
+            </span>
+
+            <p>
+                USE ARROW KEYS / WASD OR SWIPE TO MOVE
             </p>
 
+            <span>
+                ─────
+            </span>
 
-            <div class="game-actions">
-
-                <button
-                    id="backButton"
-                    class="small-button"
-                    type="button"
-                >
-                    🗺️ Maps
-                </button>
+        </div>
 
 
-                <button
-                    id="restartButton"
-                    class="small-button"
-                    type="button"
-                >
-                    🔄 Restart
-                </button>
+        <div class="game-buttons">
 
-            </div>
+            <button id="restartButton">
+                RESTART
+            </button>
 
-        </section>
+            <button id="mapButton">
+                MAPS
+            </button>
+
+        </div>
 
     </main>
 
