@@ -1,6 +1,5 @@
 /* =========================================================
    OARADHI PAC-MAN
-   WORD MAZE VERSION
 ========================================================= */
 
 
@@ -8,29 +7,26 @@
    ELEMENTS
 ========================================================= */
 
-const mapScreen =
-    document.getElementById("mapScreen");
-
-const gameScreen =
-    document.getElementById("gameScreen");
-
-const mapList =
-    document.getElementById("mapList");
-
-const playButton =
-    document.getElementById("playButton");
-
-const backButton =
-    document.getElementById("backButton");
-
-const restartButton =
-    document.getElementById("restartButton");
-
 const canvas =
     document.getElementById("gameCanvas");
 
 const ctx =
     canvas.getContext("2d");
+
+const game =
+    document.getElementById("game");
+
+const mapScreen =
+    document.getElementById("mapScreen");
+
+const playButton =
+    document.getElementById("playButton");
+
+const restartButton =
+    document.getElementById("restartButton");
+
+const mapButton =
+    document.getElementById("mapButton");
 
 const scoreDisplay =
     document.getElementById("score");
@@ -41,234 +37,146 @@ const livesDisplay =
 const currentMapDisplay =
     document.getElementById("currentMap");
 
-const gameMessage =
-    document.getElementById("gameMessage");
-
 
 /* =========================================================
    SETTINGS
 ========================================================= */
 
-const COLS = 28;
+const COLS = 31;
 
-const ROWS = 15;
+const ROWS = 17;
 
-const TILE = 24;
+const TILE =
+    canvas.width / COLS;
 
 
 /* =========================================================
-   MAPS
+   COLOURS
 ========================================================= */
 
-/*
-    # = wall
-    . = dot
-    space = empty path
-    P = player spawn
-    G = ghost area
-*/
-
-const MAPS = {
-
-    OARADHI: {
-
-        name: "OARADHI",
-
-        description:
-            "The OARADHI maze",
-
-        accent:
-            "#123cff",
-
-        layout: [
-
-            "############################",
-
-            "#............##............#",
-
-            "#.####.#####.##.#####.####.#",
-
-            "#.#  #.#   #....#   #.#  #.#",
-
-            "#.#  #.#   ######   #.#  #.#",
-
-            "#.####.#####.##.#####.####.#",
-
-            "#..........................#",
-
-            "###.##.###.######.###.##.###",
-
-            "#....#....#  GG  #....#....#",
-
-            "###.##.###.######.###.##.###",
-
-            "#..........................#",
-
-            "#.####.#####.##.#####.####.#",
-
-            "#.#  #.#   #....#   #.#  #.#",
-
-            "#..........................#",
-
-            "############################"
-
-        ]
-
-    },
-
-
-    RADHIRA: {
-
-        name: "RADHIRA",
-
-        description:
-            "Symmetrical and tricky",
-
-        accent:
-            "#ff38a8",
-
-        layout: [
-
-            "############################",
-
-            "#..........................#",
-
-            "#.###.###.######.###.###..#",
-
-            "#.#...#.#........#.#...#..#",
-
-            "#.#.###.####..####.###.#..#",
-
-            "#.#....................#..#",
-
-            "#.######.########.######..#",
-
-            "#........#  GG  #..........#",
-
-            "#.######.########.######..#",
-
-            "#.#....................#..#",
-
-            "#.#.###.####..####.###.#..#",
-
-            "#.#...#.#........#.#...#..#",
-
-            "#.###.###.######.###.###..#",
-
-            "#..........................#",
-
-            "############################"
-
-        ]
-
-    },
-
-
-    RUZRUN: {
-
-        name: "RUZRUN",
-
-        description:
-            "Fast and open",
-
-        accent:
-            "#168cff",
-
-        layout: [
-
-            "############################",
-
-            "#..........................#",
-
-            "#.######.##########.######.#",
-
-            "#.#......................#.#",
-
-            "#.#.####.##########.####.#.#",
-
-            "#.#.#................#.#.#.#",
-
-            "#.#.#.####..GG..####.#.#.#",
-
-            "#...#................#...#.#",
-
-            "#.#.#.####......####.#.#.#",
-
-            "#.#.#................#.#.#.#",
-
-            "#.#.####.##########.####.#.#",
-
-            "#.#......................#.#",
-
-            "#.######.##########.######.#",
-
-            "#..........................#",
-
-            "############################"
-
-        ]
-
-    },
-
-
-    WARUN: {
-
-        name: "WARUN",
-
-        description:
-            "Compact and dangerous",
-
-        accent:
-            "#28d66f",
-
-        layout: [
-
-            "############################",
-
-            "#..##......##......##......#",
-
-            "#..##.####.##.####.##.####.#",
-
-            "#....#....#....#....#.....#",
-
-            "####.#.##.####.##.####.####",
-
-            "#....#.................#...#",
-
-            "#.######.####GG####.######.#",
-
-            "#..........................#",
-
-            "#.######.####..####.######.#",
-
-            "#...#.................#....#",
-
-            "####.####.##.####.##.####.#",
-
-            "#.....#....#....#....#....#",
-
-            "#.####.##.####.##.####.##.#",
-
-            "#..........................#",
-
-            "############################"
-
-        ]
-
-    }
+const BLUE = "#064cff";
+
+const BRIGHT_BLUE = "#174fff";
+
+const YELLOW = "#ffe600";
+
+const PELLET = "#ffe9a8";
+
+
+/* =========================================================
+   MAP DATA
+========================================================= */
+
+const MAP_NAMES = [
+
+    "OARADHI",
+    "RADHIRA",
+    "RUZRUN",
+    "WARUN"
+
+];
+
+
+/* =========================================================
+   LETTER DESIGNS
+========================================================= */
+
+const LETTERS = {
+
+    O: [
+        "111",
+        "101",
+        "101",
+        "101",
+        "111"
+    ],
+
+    A: [
+        "010",
+        "101",
+        "111",
+        "101",
+        "101"
+    ],
+
+    R: [
+        "110",
+        "101",
+        "110",
+        "101",
+        "101"
+    ],
+
+    D: [
+        "110",
+        "101",
+        "101",
+        "101",
+        "110"
+    ],
+
+    H: [
+        "101",
+        "101",
+        "111",
+        "101",
+        "101"
+    ],
+
+    I: [
+        "111",
+        "010",
+        "010",
+        "010",
+        "111"
+    ],
+
+    U: [
+        "101",
+        "101",
+        "101",
+        "101",
+        "111"
+    ],
+
+    N: [
+        "101",
+        "111",
+        "111",
+        "111",
+        "101"
+    ],
+
+    Z: [
+        "111",
+        "001",
+        "010",
+        "100",
+        "111"
+    ],
+
+    W: [
+        "101",
+        "101",
+        "101",
+        "111",
+        "101"
+    ]
 
 };
 
 
 /* =========================================================
-   STATE
+   GAME STATE
 ========================================================= */
 
-let selectedMap = null;
+let selectedMap = "OARADHI";
 
-let currentMap = null;
+let maze = [];
 
-let board = [];
+let pellets = new Set();
+
+let powerPellets = new Set();
 
 let score = 0;
 
@@ -276,43 +184,60 @@ let lives = 3;
 
 let gameRunning = false;
 
-let animationFrame = null;
+let level = 1;
+
+let frightenedTimer = 0;
+
+let lastTime = 0;
+
+let pelletCount = 0;
 
 
 /* =========================================================
-   PLAYER
+   PACMAN
 ========================================================= */
 
-const player = {
+const pacman = {
 
-    x: 1,
+    x: 15.5,
 
-    y: 1,
+    y: 15.5,
 
-    direction: "right",
+    direction: "left",
 
-    nextDirection: "right",
+    nextDirection: "left",
 
-    speed: 7
+    speed: 7,
+
+    mouth: 0,
+
+    mouthDirection: 1
 
 };
 
 
 /* =========================================================
-   DIRECTION
+   GHOSTS
+========================================================= */
+
+let ghosts = [];
+
+
+const ghostColours = [
+
+    "#ff3030",
+    "#ff8bd8",
+    "#20e6ff",
+    "#ffad20"
+
+];
+
+
+/* =========================================================
+   DIRECTIONS
 ========================================================= */
 
 const DIRECTIONS = {
-
-    up: {
-        x: 0,
-        y: -1
-    },
-
-    down: {
-        x: 0,
-        y: 1
-    },
 
     left: {
         x: -1,
@@ -322,174 +247,559 @@ const DIRECTIONS = {
     right: {
         x: 1,
         y: 0
+    },
+
+    up: {
+        x: 0,
+        y: -1
+    },
+
+    down: {
+        x: 0,
+        y: 1
     }
 
 };
 
 
-/* =========================================================
-   MAP MENU
-========================================================= */
+function opposite(direction) {
 
-function createMapMenu() {
+    if (direction === "left")
+        return "right";
 
-    mapList.innerHTML = "";
+    if (direction === "right")
+        return "left";
 
-    Object.values(MAPS).forEach(
-        map => {
+    if (direction === "up")
+        return "down";
 
-            const card =
-                document.createElement("div");
-
-            card.className =
-                "map-card";
-
-            card.dataset.map =
-                map.name;
-
-
-            const title =
-                document.createElement("h2");
-
-            title.textContent =
-                map.name;
-
-
-            const preview =
-                createMapPreview(
-                    map.layout
-                );
-
-
-            const description =
-                document.createElement("p");
-
-            description.textContent =
-                map.description;
-
-
-            card.appendChild(title);
-
-            card.appendChild(preview);
-
-            card.appendChild(description);
-
-
-            card.addEventListener(
-                "click",
-                () => {
-
-                    selectMap(
-                        map.name
-                    );
-
-                }
-            );
-
-
-            mapList.appendChild(card);
-
-        }
-    );
+    return "up";
 
 }
 
 
 /* =========================================================
-   MAP PREVIEW
+   CREATE MAP
 ========================================================= */
 
-function createMapPreview(layout) {
+function createMap(word) {
 
-    const preview =
-        document.createElement("div");
-
-    preview.className =
-        "map-preview";
-
-    preview.style.gridTemplateColumns =
-        `repeat(${COLS}, 1fr)`;
-
-    preview.style.gridTemplateRows =
-        `repeat(${ROWS}, 1fr)`;
+    maze =
+        Array.from(
+            {
+                length: ROWS
+            },
+            () =>
+                Array(COLS).fill(" ")
+        );
 
 
-    layout.forEach(row => {
+    /* -----------------------------------------------------
+       OUTER BORDER
+    ----------------------------------------------------- */
 
-        [...row].forEach(
-            character => {
+    for (
+        let y = 0;
+        y < ROWS;
+        y++
+    ) {
 
-                const cell =
-                    document.createElement("div");
+        for (
+            let x = 0;
+            x < COLS;
+            x++
+        ) {
 
+            if (
+                x === 0 ||
+                x === COLS - 1 ||
+                y === 0 ||
+                y === ROWS - 1
+            ) {
+
+                maze[y][x] = "#";
+
+            }
+
+        }
+
+    }
+
+
+    /* -----------------------------------------------------
+       TUNNEL
+    ----------------------------------------------------- */
+
+    maze[8][0] = "T";
+
+    maze[8][1] = " ";
+
+    maze[8][COLS - 2] = " ";
+
+    maze[8][COLS - 1] = "T";
+
+
+    /* -----------------------------------------------------
+       HORIZONTAL MAZE WALLS
+    ----------------------------------------------------- */
+
+    addHorizontalWall(
+        2,
+        2,
+        8
+    );
+
+    addHorizontalWall(
+        2,
+        12,
+        18
+    );
+
+    addHorizontalWall(
+        2,
+        22,
+        28
+    );
+
+
+    addHorizontalWall(
+        10,
+        2,
+        8
+    );
+
+    addHorizontalWall(
+        10,
+        22,
+        28
+    );
+
+
+    addHorizontalWall(
+        14,
+        2,
+        8
+    );
+
+    addHorizontalWall(
+        14,
+        11,
+        20
+    );
+
+    addHorizontalWall(
+        14,
+        23,
+        28
+    );
+
+
+    /* -----------------------------------------------------
+       VERTICAL MAZE WALLS
+    ----------------------------------------------------- */
+
+    addVerticalWall(
+        4,
+        3,
+        5
+    );
+
+    addVerticalWall(
+        9,
+        1,
+        3
+    );
+
+    addVerticalWall(
+        21,
+        1,
+        3
+    );
+
+    addVerticalWall(
+        26,
+        3,
+        5
+    );
+
+
+    addVerticalWall(
+        4,
+        10,
+        13
+    );
+
+    addVerticalWall(
+        9,
+        12,
+        14
+    );
+
+    addVerticalWall(
+        21,
+        12,
+        14
+    );
+
+    addVerticalWall(
+        26,
+        10,
+        13
+    );
+
+
+    /* -----------------------------------------------------
+       GIANT WORD
+    ----------------------------------------------------- */
+
+    drawWordWalls(word);
+
+
+    /* -----------------------------------------------------
+       GHOST HOUSE
+    ----------------------------------------------------- */
+
+    createGhostHouse();
+
+
+    /* -----------------------------------------------------
+       OPEN PACMAN AREA
+    ----------------------------------------------------- */
+
+    maze[15][14] = " ";
+
+    maze[15][15] = " ";
+
+    maze[15][16] = " ";
+
+    maze[14][15] = " ";
+
+    maze[13][15] = " ";
+
+
+    /* -----------------------------------------------------
+       MAKE SURE TUNNEL IS OPEN
+    ----------------------------------------------------- */
+
+    maze[8][0] = "T";
+
+    maze[8][1] = " ";
+
+    maze[8][COLS - 2] = " ";
+
+    maze[8][COLS - 1] = "T";
+
+
+    /* -----------------------------------------------------
+       PELLETS
+    ----------------------------------------------------- */
+
+    pellets.clear();
+
+    powerPellets.clear();
+
+
+    for (
+        let y = 1;
+        y < ROWS - 1;
+        y++
+    ) {
+
+        for (
+            let x = 1;
+            x < COLS - 1;
+            x++
+        ) {
+
+            if (
+                maze[y][x] !== "#"
+            ) {
 
                 if (
-                    character === "#"
+                    !isInsideGhostHouse(
+                        x,
+                        y
+                    )
                 ) {
 
-                    cell.className =
-                        "preview-wall";
-
-                }
-
-                else {
-
-                    cell.className =
-                        "preview-path";
-
-
                     if (
-                        character === "."
+                        !(
+                            x === 15 &&
+                            y === 15
+                        )
                     ) {
 
-                        cell.classList.add(
-                            "preview-dot"
+                        pellets.add(
+                            `${x},${y}`
                         );
 
                     }
 
                 }
 
+            }
 
-                preview.appendChild(
-                    cell
+        }
+
+    }
+
+
+    /* -----------------------------------------------------
+       POWER PELLETS
+    ----------------------------------------------------- */
+
+    const powerPositions = [
+
+        [1, 1],
+
+        [29, 1],
+
+        [1, 15],
+
+        [29, 15]
+
+    ];
+
+
+    powerPositions.forEach(
+        ([x, y]) => {
+
+            if (
+                maze[y][x] !== "#"
+            ) {
+
+                powerPellets.add(
+                    `${x},${y}`
+                );
+
+                pellets.delete(
+                    `${x},${y}`
                 );
 
             }
-        );
 
-    });
+        }
+    );
 
 
-    return preview;
+    pelletCount =
+        pellets.size +
+        powerPellets.size;
 
 }
 
 
 /* =========================================================
-   SELECT MAP
+   HORIZONTAL WALL
 ========================================================= */
 
-function selectMap(name) {
+function addHorizontalWall(
+    y,
+    start,
+    end
+) {
 
-    selectedMap =
-        MAPS[name];
+    for (
+        let x = start;
+        x <= end;
+        x++
+    ) {
+
+        maze[y][x] = "#";
+
+    }
+
+}
 
 
-    document
-        .querySelectorAll(".map-card")
-        .forEach(card => {
+/* =========================================================
+   VERTICAL WALL
+========================================================= */
 
-            card.classList.toggle(
-                "selected",
-                card.dataset.map === name
-            );
+function addVerticalWall(
+    x,
+    start,
+    end
+) {
 
-        });
+    for (
+        let y = start;
+        y <= end;
+        y++
+    ) {
+
+        maze[y][x] = "#";
+
+    }
+
+}
 
 
-    playButton.disabled =
-        false;
+/* =========================================================
+   DRAW WORD WALLS
+========================================================= */
+
+function drawWordWalls(word) {
+
+    let width =
+        word.length * 3 +
+        (word.length - 1);
+
+
+    let startX =
+        Math.floor(
+            (COLS - width) / 2
+        );
+
+
+    let xPosition = startX;
+
+
+    for (
+        const letter of word
+    ) {
+
+        const design =
+            LETTERS[letter];
+
+
+        for (
+            let row = 0;
+            row < 5;
+            row++
+        ) {
+
+            for (
+                let col = 0;
+                col < 3;
+                col++
+            ) {
+
+                if (
+                    design[row][col] === "1"
+                ) {
+
+                    const x =
+                        xPosition + col;
+
+                    const y =
+                        4 + row;
+
+
+                    if (
+                        x > 0 &&
+                        x < COLS - 1 &&
+                        y > 0 &&
+                        y < ROWS - 1
+                    ) {
+
+                        maze[y][x] = "#";
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        xPosition += 4;
+
+    }
+
+}
+
+
+/* =========================================================
+   GHOST HOUSE
+========================================================= */
+
+function createGhostHouse() {
+
+    /* Top */
+
+    for (
+        let x = 12;
+        x <= 18;
+        x++
+    ) {
+
+        maze[10][x] = "#";
+
+    }
+
+
+    /* Bottom */
+
+    for (
+        let x = 12;
+        x <= 18;
+        x++
+    ) {
+
+        maze[13][x] = "#";
+
+    }
+
+
+    /* Left */
+
+    maze[11][12] = "#";
+
+    maze[12][12] = "#";
+
+
+    /* Right */
+
+    maze[11][18] = "#";
+
+    maze[12][18] = "#";
+
+
+    /* Interior */
+
+    for (
+        let y = 11;
+        y <= 12;
+        y++
+    ) {
+
+        for (
+            let x = 13;
+            x <= 17;
+            x++
+        ) {
+
+            maze[y][x] = " ";
+
+        }
+
+    }
+
+
+    /* Door */
+
+    maze[10][15] = " ";
+
+}
+
+
+/* =========================================================
+   GHOST HOUSE CHECK
+========================================================= */
+
+function isInsideGhostHouse(
+    x,
+    y
+) {
+
+    return (
+        x >= 13 &&
+        x <= 17 &&
+        y >= 11 &&
+        y <= 12
+    );
 
 }
 
@@ -500,527 +810,243 @@ function selectMap(name) {
 
 function startGame() {
 
-    if (!selectedMap) {
-        return;
-    }
-
-
-    currentMap =
-        selectedMap;
-
-
     score = 0;
 
     lives = 3;
+
+    level = 1;
+
+    frightenedTimer = 0;
 
     gameRunning = true;
 
 
     currentMapDisplay.textContent =
-        currentMap.name;
+        selectedMap;
 
 
-    scoreDisplay.textContent =
-        score;
-
-
-    updateLives();
-
-
-    mapScreen.classList.add(
-        "hidden"
-    );
-
-    gameScreen.classList.remove(
-        "hidden"
+    createMap(
+        selectedMap
     );
 
 
-    loadMap();
+    resetCharacters();
 
 
-    resizeCanvas();
+    updateHUD();
 
 
-    gameMessage.textContent =
-        "Swipe or use the arrow keys ✨";
+    mapScreen.style.display =
+        "none";
+
+    game.style.display =
+        "flex";
 
 
-    startLoop();
+    lastTime =
+        performance.now();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
 
 /* =========================================================
-   LOAD MAP
+   RESET CHARACTERS
 ========================================================= */
 
-function loadMap() {
+function resetCharacters() {
 
-    board =
-        currentMap.layout.map(
-            row => [...row]
-        );
+    pacman.x = 15.5;
+
+    pacman.y = 15.5;
+
+    pacman.direction = "left";
+
+    pacman.nextDirection = "left";
 
 
-    findPlayerSpawn();
+    ghosts = [
 
+        createGhost(
+            15,
+            11,
+            "left",
+            0
+        ),
 
-    player.direction =
-        "right";
+        createGhost(
+            14,
+            11,
+            "right",
+            1
+        ),
 
-    player.nextDirection =
-        "right";
+        createGhost(
+            16,
+            11,
+            "left",
+            2
+        ),
+
+        createGhost(
+            15,
+            12,
+            "up",
+            3
+        )
+
+    ];
 
 }
 
 
 /* =========================================================
-   PLAYER SPAWN
+   CREATE GHOST
 ========================================================= */
 
-function findPlayerSpawn() {
+function createGhost(
+    x,
+    y,
+    direction,
+    index
+) {
 
-    /*
-        We intentionally place the player
-        at the first safe corridor.
-    */
+    return {
 
-    for (
-        let y = 0;
-        y < ROWS;
-        y++
-    ) {
+        x: x + 0.5,
 
-        for (
-            let x = 0;
-            x < COLS;
-            x++
-        ) {
+        y: y + 0.5,
 
-            if (
-                board[y][x] === "."
-            ) {
+        direction,
 
-                player.x =
-                    x;
+        speed: 5.2,
 
-                player.y =
-                    y;
+        colour:
+            ghostColours[index],
 
-                board[y][x] =
-                    " ";
+        home: true,
 
-                return;
+        index
 
-            }
+    };
 
-        }
+}
+
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function gameLoop(time) {
+
+    if (!gameRunning) {
+
+        draw();
+
+        return;
 
     }
 
-}
+
+    const delta =
+        Math.min(
+            (time - lastTime) / 1000,
+            0.05
+        );
 
 
-/* =========================================================
-   CANVAS
-========================================================= */
-
-function resizeCanvas() {
-
-    const width =
-        canvas.clientWidth;
-
-    const height =
-        width *
-        ROWS /
-        COLS;
+    lastTime = time;
 
 
-    const ratio =
-        window.devicePixelRatio || 1;
+    frightenedTimer -=
+        delta;
 
 
-    canvas.width =
-        width * ratio;
+    updatePacman(delta);
 
-    canvas.height =
-        height * ratio;
+    updateGhosts(delta);
 
+    checkPellets();
 
-    canvas.style.height =
-        `${height}px`;
+    checkGhostCollision();
 
-
-    ctx.setTransform(
-        ratio,
-        0,
-        0,
-        ratio,
-        0,
-        0
-    );
-
+    updateMouth(delta);
 
     draw();
 
-}
 
-
-/* =========================================================
-   DRAW
-========================================================= */
-
-function draw() {
-
-    if (!currentMap) {
-        return;
-    }
-
-
-    const width =
-        canvas.clientWidth;
-
-    const height =
-        canvas.clientHeight;
-
-
-    const tileWidth =
-        width / COLS;
-
-    const tileHeight =
-        height / ROWS;
-
-
-    ctx.clearRect(
-        0,
-        0,
-        width,
-        height
-    );
-
-
-    ctx.fillStyle =
-        "#000";
-
-    ctx.fillRect(
-        0,
-        0,
-        width,
-        height
-    );
-
-
-    /* =========================================
-       WALLS + DOTS
-    ========================================= */
-
-    for (
-        let y = 0;
-        y < ROWS;
-        y++
-    ) {
-
-        for (
-            let x = 0;
-            x < COLS;
-            x++
-        ) {
-
-            const tile =
-                board[y][x];
-
-
-            if (
-                tile === "#"
-            ) {
-
-                drawWall(
-                    x,
-                    y,
-                    tileWidth,
-                    tileHeight
-                );
-
-            }
-
-
-            else if (
-                tile === "."
-            ) {
-
-                drawDot(
-                    x,
-                    y,
-                    tileWidth,
-                    tileHeight
-                );
-
-            }
-
-        }
-
-    }
-
-
-    /* =========================================
-       PLAYER
-    ========================================= */
-
-    drawPlayer(
-        tileWidth,
-        tileHeight
+    requestAnimationFrame(
+        gameLoop
     );
 
 }
 
 
 /* =========================================================
-   WALL
+   PACMAN UPDATE
 ========================================================= */
 
-function drawWall(
-    x,
-    y,
-    width,
-    height
-) {
-
-    const px =
-        x * width;
-
-    const py =
-        y * height;
-
-
-    ctx.strokeStyle =
-        currentMap.accent;
-
-    ctx.lineWidth =
-        Math.max(
-            2,
-            width * 0.12
-        );
-
-
-    ctx.strokeRect(
-        px + width * 0.16,
-        py + height * 0.16,
-        width * 0.68,
-        height * 0.68
-    );
-
-}
-
-
-/* =========================================================
-   DOT
-========================================================= */
-
-function drawDot(
-    x,
-    y,
-    width,
-    height
-) {
-
-    ctx.fillStyle =
-        "#fff";
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-        x * width + width / 2,
-        y * height + height / 2,
-        Math.max(
-            1.5,
-            width * 0.07
-        ),
-        0,
-        Math.PI * 2
-    );
-
-
-    ctx.fill();
-
-}
-
-
-/* =========================================================
-   PLAYER
-========================================================= */
-
-function drawPlayer(
-    width,
-    height
-) {
-
-    const px =
-        player.x * width +
-        width / 2;
-
-    const py =
-        player.y * height +
-        height / 2;
-
-
-    const radius =
-        Math.min(
-            width,
-            height
-        ) * 0.36;
-
-
-    let rotation = 0;
-
-
-    if (
-        player.direction === "right"
-    ) {
-
-        rotation = 0;
-
-    }
-
-    else if (
-        player.direction === "down"
-    ) {
-
-        rotation =
-            Math.PI / 2;
-
-    }
-
-    else if (
-        player.direction === "left"
-    ) {
-
-        rotation =
-            Math.PI;
-
-    }
-
-    else if (
-        player.direction === "up"
-    ) {
-
-        rotation =
-            -Math.PI / 2;
-
-    }
-
-
-    ctx.save();
-
-
-    ctx.translate(
-        px,
-        py
-    );
-
-
-    ctx.rotate(
-        rotation
-    );
-
-
-    ctx.fillStyle =
-        "#ffd91a";
-
-
-    ctx.beginPath();
-
-
-    ctx.moveTo(
-        0,
-        0
-    );
-
-
-    ctx.arc(
-        0,
-        0,
-        radius,
-        0.35,
-        Math.PI * 2 - 0.35
-    );
-
-
-    ctx.closePath();
-
-
-    ctx.fill();
-
-
-    ctx.restore();
-
-}
-
-
-/* =========================================================
-   MOVEMENT
-========================================================= */
-
-function movePlayer() {
-
-    if (!gameRunning) {
-        return;
-    }
-
+function updatePacman(delta) {
 
     const next =
         DIRECTIONS[
-            player.nextDirection
+            pacman.nextDirection
         ];
 
 
     if (
         canMove(
-            player.x + next.x,
-            player.y + next.y
+            pacman.x,
+            pacman.y,
+            pacman.nextDirection
         )
     ) {
 
-        player.direction =
-            player.nextDirection;
+        pacman.direction =
+            pacman.nextDirection;
 
     }
 
 
     const direction =
         DIRECTIONS[
-            player.direction
+            pacman.direction
         ];
-
-
-    const newX =
-        player.x +
-        direction.x;
-
-    const newY =
-        player.y +
-        direction.y;
 
 
     if (
         canMove(
-            newX,
-            newY
+            pacman.x,
+            pacman.y,
+            pacman.direction
         )
     ) {
 
-        player.x =
-            newX;
+        pacman.x +=
+            direction.x *
+            pacman.speed *
+            delta;
 
-        player.y =
-            newY;
-
-
-        collectDot();
+        pacman.y +=
+            direction.y *
+            pacman.speed *
+            delta;
 
     }
+
+
+    handleTunnel(
+        pacman
+    );
+
+
+    snapAtIntersection(
+        pacman
+    );
 
 }
 
@@ -1031,48 +1057,456 @@ function movePlayer() {
 
 function canMove(
     x,
-    y
+    y,
+    direction
+) {
+
+    const dir =
+        DIRECTIONS[direction];
+
+
+    const nx =
+        x +
+        dir.x *
+        0.55;
+
+    const ny =
+        y +
+        dir.y *
+        0.55;
+
+
+    const tileX =
+        Math.floor(nx);
+
+    const tileY =
+        Math.floor(ny);
+
+
+    if (
+        tileX < 0 ||
+        tileX >= COLS ||
+        tileY < 0 ||
+        tileY >= ROWS
+    ) {
+
+        return true;
+
+    }
+
+
+    return (
+        maze[tileY][tileX] !== "#"
+    );
+
+}
+
+
+/* =========================================================
+   TUNNEL
+========================================================= */
+
+function handleTunnel(
+    character
 ) {
 
     if (
-        x < 0 ||
-        x >= COLS ||
-        y < 0 ||
-        y >= ROWS
+        character.x < -0.5
     ) {
 
-        return false;
+        character.x =
+            COLS - 0.5;
 
     }
 
 
-    return board[y][x] !== "#";
+    if (
+        character.x >
+        COLS - 0.5
+    ) {
+
+        character.x =
+            -0.5;
+
+    }
 
 }
 
 
 /* =========================================================
-   COLLECT DOT
+   SNAP
 ========================================================= */
 
-function collectDot() {
+function snapAtIntersection(
+    character
+) {
 
     if (
-        board[player.y][player.x] === "."
+        Math.abs(
+            character.x -
+            Math.round(character.x)
+        ) < 0.08
     ) {
 
-        board[player.y][player.x] =
-            " ";
+        character.x =
+            Math.round(character.x);
 
+    }
+
+
+    if (
+        Math.abs(
+            character.y -
+            Math.round(character.y)
+        ) < 0.08
+    ) {
+
+        character.y =
+            Math.round(character.y);
+
+    }
+
+}
+
+
+/* =========================================================
+   GHOST UPDATE
+========================================================= */
+
+function updateGhosts(delta) {
+
+    ghosts.forEach(
+        ghost => {
+
+            if (
+                ghost.home
+            ) {
+
+                ghost.y -=
+                    delta * 0.8;
+
+                if (
+                    ghost.y <= 10.5
+                ) {
+
+                    ghost.home =
+                        false;
+
+                    ghost.y =
+                        9.5;
+
+                }
+
+                return;
+
+            }
+
+
+            const possible =
+                getPossibleDirections(
+                    ghost
+                );
+
+
+            if (
+                possible.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+            const current =
+                ghost.direction;
+
+
+            const reverse =
+                opposite(
+                    current
+                );
+
+
+            let choices =
+                possible.filter(
+                    direction =>
+                        direction !==
+                        reverse
+                );
+
+
+            if (
+                choices.length === 0
+            ) {
+
+                choices =
+                    possible;
+
+            }
+
+
+            /* Change direction near intersections */
+
+            if (
+                isNearCenter(
+                    ghost
+                )
+            ) {
+
+                if (
+                    Math.random() <
+                    0.18
+                ) {
+
+                    ghost.direction =
+                        chooseGhostDirection(
+                            ghost,
+                            choices
+                        );
+
+                }
+
+            }
+
+
+            const dir =
+                DIRECTIONS[
+                    ghost.direction
+                ];
+
+
+            if (
+                canMove(
+                    ghost.x,
+                    ghost.y,
+                    ghost.direction
+                )
+            ) {
+
+                ghost.x +=
+                    dir.x *
+                    ghost.speed *
+                    delta;
+
+                ghost.y +=
+                    dir.y *
+                    ghost.speed *
+                    delta;
+
+            }
+
+
+            handleTunnel(
+                ghost
+            );
+
+
+            snapAtIntersection(
+                ghost
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   POSSIBLE GHOST DIRECTIONS
+========================================================= */
+
+function getPossibleDirections(
+    ghost
+) {
+
+    const result = [];
+
+    Object.keys(
+        DIRECTIONS
+    ).forEach(
+        direction => {
+
+            if (
+                canMove(
+                    ghost.x,
+                    ghost.y,
+                    direction
+                )
+            ) {
+
+                result.push(
+                    direction
+                );
+
+            }
+
+        }
+    );
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   GHOST AI
+========================================================= */
+
+function chooseGhostDirection(
+    ghost,
+    choices
+) {
+
+    if (
+        frightenedTimer > 0
+    ) {
+
+        return choices[
+            Math.floor(
+                Math.random() *
+                choices.length
+            )
+        ];
+
+    }
+
+
+    let best =
+        choices[0];
+
+    let bestDistance =
+        Infinity;
+
+
+    choices.forEach(
+        direction => {
+
+            const dir =
+                DIRECTIONS[
+                    direction
+                ];
+
+
+            const tx =
+                ghost.x +
+                dir.x * 3;
+
+
+            const ty =
+                ghost.y +
+                dir.y * 3;
+
+
+            const distance =
+                Math.hypot(
+                    pacman.x - tx,
+                    pacman.y - ty
+                );
+
+
+            if (
+                distance <
+                bestDistance
+            ) {
+
+                bestDistance =
+                    distance;
+
+                best =
+                    direction;
+
+            }
+
+        }
+    );
+
+
+    return best;
+
+}
+
+
+/* =========================================================
+   INTERSECTION CHECK
+========================================================= */
+
+function isNearCenter(
+    character
+) {
+
+    return (
+
+        Math.abs(
+            character.x -
+            Math.round(character.x)
+        ) < 0.1 &&
+
+        Math.abs(
+            character.y -
+            Math.round(character.y)
+        ) < 0.1
+
+    );
+
+}
+
+
+/* =========================================================
+   PELLETS
+========================================================= */
+
+function checkPellets() {
+
+    const x =
+        Math.floor(
+            pacman.x
+        );
+
+    const y =
+        Math.floor(
+            pacman.y
+        );
+
+
+    const key =
+        `${x},${y}`;
+
+
+    if (
+        pellets.has(key)
+    ) {
+
+        pellets.delete(key);
 
         score += 10;
 
+        updateHUD();
 
-        scoreDisplay.textContent =
-            score;
+    }
 
 
-        checkDots();
+    if (
+        powerPellets.has(key)
+    ) {
+
+        powerPellets.delete(key);
+
+        score += 50;
+
+        frightenedTimer = 8;
+
+        updateHUD();
+
+    }
+
+
+    if (
+        pellets.size === 0 &&
+        powerPellets.size === 0
+    ) {
+
+        nextLevel();
 
     }
 
@@ -1080,10 +1514,203 @@ function collectDot() {
 
 
 /* =========================================================
-   CHECK DOTS
+   NEXT LEVEL
 ========================================================= */
 
-function checkDots() {
+function nextLevel() {
+
+    level++;
+
+    createMap(
+        selectedMap
+    );
+
+    resetCharacters();
+
+}
+
+
+/* =========================================================
+   GHOST COLLISION
+========================================================= */
+
+function checkGhostCollision() {
+
+    ghosts.forEach(
+        ghost => {
+
+            const distance =
+                Math.hypot(
+                    pacman.x -
+                    ghost.x,
+
+                    pacman.y -
+                    ghost.y
+                );
+
+
+            if (
+                distance < 0.65
+            ) {
+
+                if (
+                    frightenedTimer > 0
+                ) {
+
+                    score += 200;
+
+                    ghost.x =
+                        15.5;
+
+                    ghost.y =
+                        11.5;
+
+                    ghost.home =
+                        true;
+
+                    updateHUD();
+
+                }
+
+                else {
+
+                    loseLife();
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   LOSE LIFE
+========================================================= */
+
+function loseLife() {
+
+    lives--;
+
+    updateHUD();
+
+
+    if (
+        lives <= 0
+    ) {
+
+        gameOver();
+
+        return;
+
+    }
+
+
+    resetCharacters();
+
+}
+
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+function gameOver() {
+
+    gameRunning = false;
+
+    draw();
+
+    setTimeout(
+        () => {
+
+            alert(
+                `GAME OVER!\n\nScore: ${score}`
+            );
+
+        },
+        100
+    );
+
+}
+
+
+/* =========================================================
+   MOUTH
+========================================================= */
+
+function updateMouth(delta) {
+
+    pacman.mouth +=
+        pacman.mouthDirection *
+        delta *
+        10;
+
+
+    if (
+        pacman.mouth > 1
+    ) {
+
+        pacman.mouth = 1;
+
+        pacman.mouthDirection =
+            -1;
+
+    }
+
+
+    if (
+        pacman.mouth < 0
+    ) {
+
+        pacman.mouth = 0;
+
+        pacman.mouthDirection =
+            1;
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAW EVERYTHING
+========================================================= */
+
+function draw() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    drawMaze();
+
+    drawPellets();
+
+    drawGhosts();
+
+    drawPacman();
+
+}
+
+
+/* =========================================================
+   DRAW MAZE
+========================================================= */
+
+function drawMaze() {
+
+    ctx.lineWidth = 2;
+
+    ctx.strokeStyle =
+        BLUE;
+
 
     for (
         let y = 0;
@@ -1098,10 +1725,13 @@ function checkDots() {
         ) {
 
             if (
-                board[y][x] === "."
+                maze[y][x] === "#"
             ) {
 
-                return;
+                drawWall(
+                    x,
+                    y
+                );
 
             }
 
@@ -1110,93 +1740,424 @@ function checkDots() {
     }
 
 
-    gameMessage.textContent =
-        "MAP CLEARED! ✨";
+    /* Tunnel openings */
 
+    ctx.fillStyle =
+        "#000";
 
-    gameRunning =
-        false;
+    ctx.fillRect(
+        0,
+        8 * TILE,
+        TILE,
+        TILE
+    );
 
-}
-
-
-/* =========================================================
-   GAME LOOP
-========================================================= */
-
-let lastMove =
-    0;
-
-
-function startLoop() {
-
-    cancelAnimationFrame(
-        animationFrame
+    ctx.fillRect(
+        (COLS - 1) * TILE,
+        8 * TILE,
+        TILE,
+        TILE
     );
 
 
-    lastMove =
-        performance.now();
+    /* Ghost door */
 
+    ctx.strokeStyle =
+        "#ff8bd8";
 
-    function loop(time) {
+    ctx.lineWidth = 3;
 
-        if (!gameRunning) {
+    ctx.beginPath();
 
-            draw();
+    ctx.moveTo(
+        15 * TILE,
+        10 * TILE
+    );
 
-            return;
+    ctx.lineTo(
+        16 * TILE,
+        10 * TILE
+    );
 
-        }
-
-
-        if (
-            time - lastMove >
-            130
-        ) {
-
-            movePlayer();
-
-            lastMove =
-                time;
-
-        }
-
-
-        draw();
-
-
-        animationFrame =
-            requestAnimationFrame(
-                loop
-            );
-
-    }
-
-
-    animationFrame =
-        requestAnimationFrame(
-            loop
-        );
+    ctx.stroke();
 
 }
 
 
 /* =========================================================
-   DIRECTION INPUT
+   WALL DRAWING
 ========================================================= */
 
-function setDirection(
-    direction
+function drawWall(
+    x,
+    y
 ) {
 
-    if (!gameRunning) {
-        return;
-    }
+    const px =
+        x * TILE;
+
+    const py =
+        y * TILE;
 
 
-    player.nextDirection =
-        direction;
+    ctx.strokeStyle =
+        BRIGHT_BLUE;
+
+    ctx.lineWidth = 2;
+
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        px + 2,
+        py + 2,
+        TILE - 4,
+        TILE - 4,
+        5
+    );
+
+    ctx.stroke();
+
+
+    ctx.strokeStyle =
+        "rgba(0,80,255,0.25)";
+
+    ctx.lineWidth = 5;
+
+    ctx.stroke();
+
+}
+
+
+/* =========================================================
+   DRAW PELLETS
+========================================================= */
+
+function drawPellets() {
+
+    ctx.fillStyle =
+        PELLET;
+
+
+    pellets.forEach(
+        key => {
+
+            const [
+                x,
+                y
+            ] =
+                key
+                .split(",")
+                .map(Number);
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+                x * TILE +
+                TILE / 2,
+
+                y * TILE +
+                TILE / 2,
+
+                2,
+
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
+        }
+    );
+
+
+    powerPellets.forEach(
+        key => {
+
+            const [
+                x,
+                y
+            ] =
+                key
+                .split(",")
+                .map(Number);
+
+
+            const pulse =
+                5 +
+                Math.sin(
+                    performance.now() /
+                    150
+                ) *
+                1.5;
+
+
+            ctx.fillStyle =
+                "#fff1a8";
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+                x * TILE +
+                TILE / 2,
+
+                y * TILE +
+                TILE / 2,
+
+                pulse,
+
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DRAW PACMAN
+========================================================= */
+
+function drawPacman() {
+
+    const px =
+        pacman.x * TILE;
+
+    const py =
+        pacman.y * TILE;
+
+
+    const radius =
+        TILE * 0.42;
+
+
+    let angle = 0;
+
+
+    if (
+        pacman.direction === "right"
+    )
+        angle = 0;
+
+    if (
+        pacman.direction === "down"
+    )
+        angle = Math.PI / 2;
+
+    if (
+        pacman.direction === "left"
+    )
+        angle = Math.PI;
+
+    if (
+        pacman.direction === "up"
+    )
+        angle = -Math.PI / 2;
+
+
+    const mouth =
+        0.25 +
+        pacman.mouth *
+        0.25;
+
+
+    ctx.fillStyle =
+        YELLOW;
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        px,
+        py
+    );
+
+
+    ctx.arc(
+        px,
+        py,
+        radius,
+        angle + mouth,
+        angle +
+        Math.PI * 2 -
+        mouth
+    );
+
+
+    ctx.closePath();
+
+    ctx.fill();
+
+}
+
+
+/* =========================================================
+   DRAW GHOSTS
+========================================================= */
+
+function drawGhosts() {
+
+    ghosts.forEach(
+        ghost => {
+
+            const px =
+                ghost.x * TILE;
+
+            const py =
+                ghost.y * TILE;
+
+            const radius =
+                TILE * 0.4;
+
+
+            let colour =
+                ghost.colour;
+
+
+            if (
+                frightenedTimer > 0
+            ) {
+
+                colour =
+                    Math.floor(
+                        frightenedTimer * 8
+                    ) % 2 === 0
+                        ? "#174fff"
+                        : "#fff";
+
+            }
+
+
+            ctx.fillStyle =
+                colour;
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+                px,
+                py - 1,
+                radius,
+                Math.PI,
+                0
+            );
+
+
+            ctx.lineTo(
+                px + radius,
+                py + radius
+            );
+
+
+            ctx.lineTo(
+                px + radius * 0.5,
+                py + radius * 0.7
+            );
+
+
+            ctx.lineTo(
+                px,
+                py + radius
+            );
+
+
+            ctx.lineTo(
+                px - radius * 0.5,
+                py + radius * 0.7
+            );
+
+
+            ctx.lineTo(
+                px - radius,
+                py + radius
+            );
+
+
+            ctx.closePath();
+
+            ctx.fill();
+
+
+            /* Eyes */
+
+            ctx.fillStyle =
+                "white";
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+                px - radius * 0.35,
+                py - radius * 0.05,
+                radius * 0.2,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.arc(
+                px + radius * 0.35,
+                py - radius * 0.05,
+                radius * 0.2,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
+
+            ctx.fillStyle =
+                "#222";
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+                px - radius * 0.3,
+                py - radius * 0.05,
+                radius * 0.09,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.arc(
+                px + radius * 0.3,
+                py - radius * 0.05,
+                radius * 0.09,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function updateHUD() {
+
+    scoreDisplay.textContent =
+        score;
+
+
+    livesDisplay.textContent =
+        "❤️ ".repeat(
+            Math.max(
+                lives,
+                0
+            )
+        );
 
 }
 
@@ -1214,37 +2175,14 @@ document.addEventListener(
 
 
         if (
-            key === "arrowup" ||
-            key === "w"
-        ) {
-
-            event.preventDefault();
-
-            setDirection("up");
-
-        }
-
-
-        else if (
-            key === "arrowdown" ||
-            key === "s"
-        ) {
-
-            event.preventDefault();
-
-            setDirection("down");
-
-        }
-
-
-        else if (
             key === "arrowleft" ||
             key === "a"
         ) {
 
             event.preventDefault();
 
-            setDirection("left");
+            pacman.nextDirection =
+                "left";
 
         }
 
@@ -1256,7 +2194,34 @@ document.addEventListener(
 
             event.preventDefault();
 
-            setDirection("right");
+            pacman.nextDirection =
+                "right";
+
+        }
+
+
+        else if (
+            key === "arrowup" ||
+            key === "w"
+        ) {
+
+            event.preventDefault();
+
+            pacman.nextDirection =
+                "up";
+
+        }
+
+
+        else if (
+            key === "arrowdown" ||
+            key === "s"
+        ) {
+
+            event.preventDefault();
+
+            pacman.nextDirection =
+                "down";
 
         }
 
@@ -1265,14 +2230,12 @@ document.addEventListener(
 
 
 /* =========================================================
-   MOBILE SWIPE
+   SWIPE
 ========================================================= */
 
 let touchStartX = 0;
 
 let touchStartY = 0;
-
-let touchStartTime = 0;
 
 
 canvas.addEventListener(
@@ -1288,9 +2251,6 @@ canvas.addEventListener(
 
         touchStartY =
             touch.clientY;
-
-        touchStartTime =
-            Date.now();
 
     },
     {
@@ -1320,31 +2280,21 @@ canvas.addEventListener(
             event.changedTouches[0];
 
 
-        const deltaX =
+        const dx =
             touch.clientX -
             touchStartX;
 
 
-        const deltaY =
+        const dy =
             touch.clientY -
             touchStartY;
 
 
-        const distance =
-            Math.max(
-                Math.abs(deltaX),
-                Math.abs(deltaY)
-            );
-
-
-        const duration =
-            Date.now() -
-            touchStartTime;
-
-
         if (
-            distance < 20 ||
-            duration > 1000
+            Math.max(
+                Math.abs(dx),
+                Math.abs(dy)
+            ) < 25
         ) {
 
             return;
@@ -1353,25 +2303,21 @@ canvas.addEventListener(
 
 
         if (
-            Math.abs(deltaX) >
-            Math.abs(deltaY)
+            Math.abs(dx) >
+            Math.abs(dy)
         ) {
 
             if (
-                deltaX > 0
+                dx > 0
             ) {
 
-                setDirection(
-                    "right"
-                );
+                pacman.nextDirection =
+                    "right";
 
-            }
+            } else {
 
-            else {
-
-                setDirection(
-                    "left"
-                );
+                pacman.nextDirection =
+                    "left";
 
             }
 
@@ -1380,20 +2326,16 @@ canvas.addEventListener(
         else {
 
             if (
-                deltaY > 0
+                dy > 0
             ) {
 
-                setDirection(
-                    "down"
-                );
+                pacman.nextDirection =
+                    "down";
 
-            }
+            } else {
 
-            else {
-
-                setDirection(
-                    "up"
-                );
+                pacman.nextDirection =
+                    "up";
 
             }
 
@@ -1407,42 +2349,54 @@ canvas.addEventListener(
 
 
 /* =========================================================
-   LIVES
+   MAP SELECTION
 ========================================================= */
 
-function updateLives() {
+const mapButtons =
+    document.querySelectorAll(
+        ".map-option"
+    );
 
-    livesDisplay.textContent =
-        "❤️".repeat(lives);
 
-}
+mapButtons.forEach(
+    button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                mapButtons.forEach(
+                    other =>
+                        other.classList.remove(
+                            "selected"
+                        )
+                );
+
+
+                button.classList.add(
+                    "selected"
+                );
+
+
+                selectedMap =
+                    button.dataset.map;
+
+            }
+        );
+
+    }
+);
 
 
 /* =========================================================
-   BACK
+   PLAY
 ========================================================= */
 
-backButton.addEventListener(
+playButton.addEventListener(
     "click",
     () => {
 
-        gameRunning =
-            false;
-
-
-        cancelAnimationFrame(
-            animationFrame
-        );
-
-
-        gameScreen.classList.add(
-            "hidden"
-        );
-
-
-        mapScreen.classList.remove(
-            "hidden"
-        );
+        startGame();
 
     }
 );
@@ -1456,64 +2410,190 @@ restartButton.addEventListener(
     "click",
     () => {
 
-        score = 0;
-
-        lives = 3;
-
-        scoreDisplay.textContent =
-            score;
-
-        updateLives();
-
-        loadMap();
-
-        gameRunning =
-            true;
-
-        gameMessage.textContent =
-            "Swipe or use the arrow keys ✨";
-
-        startLoop();
+        startGame();
 
     }
 );
 
 
 /* =========================================================
-   PLAY
+   RETURN TO MAPS
 ========================================================= */
 
-playButton.addEventListener(
+mapButton.addEventListener(
     "click",
-    startGame
+    () => {
+
+        gameRunning = false;
+
+        game.style.display =
+            "none";
+
+        mapScreen.style.display =
+            "flex";
+
+    }
 );
 
 
 /* =========================================================
-   RESIZE
+   PREVIEW MAPS
 ========================================================= */
 
-window.addEventListener(
-    "resize",
-    () => {
+function drawPreview(
+    previewCanvas,
+    word
+) {
 
-        if (
-            currentMap &&
-            !gameScreen.classList.contains(
-                "hidden"
-            )
+    const previewContext =
+        previewCanvas.getContext(
+            "2d"
+        );
+
+
+    const width =
+        previewCanvas.width;
+
+    const height =
+        previewCanvas.height;
+
+
+    previewContext.fillStyle =
+        "#000";
+
+    previewContext.fillRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    const cols = 31;
+
+    const rows = 17;
+
+    const tile =
+        width / cols;
+
+
+    const oldMaze =
+        maze;
+
+
+    createMap(word);
+
+
+    previewContext.strokeStyle =
+        "#064cff";
+
+    previewContext.lineWidth =
+        1.5;
+
+
+    for (
+        let y = 0;
+        y < rows;
+        y++
+    ) {
+
+        for (
+            let x = 0;
+            x < cols;
+            x++
         ) {
 
-            resizeCanvas();
+            if (
+                maze[y][x] === "#"
+            ) {
+
+                previewContext.strokeRect(
+                    x * tile + 1,
+                    y * tile + 1,
+                    tile - 2,
+                    tile - 2
+                );
+
+            }
 
         }
 
     }
-);
+
+
+    /* Pellets */
+
+    previewContext.fillStyle =
+        "#ffe9a8";
+
+
+    pellets.forEach(
+        key => {
+
+            const [
+                x,
+                y
+            ] =
+                key
+                .split(",")
+                .map(Number);
+
+
+            previewContext.beginPath();
+
+            previewContext.arc(
+                x * tile +
+                tile / 2,
+
+                y * tile +
+                tile / 2,
+
+                1.2,
+
+                0,
+                Math.PI * 2
+            );
+
+            previewContext.fill();
+
+        }
+    );
+
+
+    maze =
+        oldMaze;
+
+}
 
 
 /* =========================================================
-   INITIALISE
+   GENERATE PREVIEWS
 ========================================================= */
 
-createMapMenu();
+document
+    .querySelectorAll(
+        ".preview"
+    )
+    .forEach(
+        preview => {
+
+            drawPreview(
+                preview,
+                preview.dataset.preview
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   INITIAL DRAW
+========================================================= */
+
+createMap(
+    selectedMap
+);
+
+resetCharacters();
+
+draw();
