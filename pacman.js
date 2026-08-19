@@ -2,40 +2,19 @@
    OARADHI PAC-MAN
 ========================================================= */
 
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-/* =========================================================
-   ELEMENTS
-========================================================= */
+const game = document.getElementById("game");
+const mapScreen = document.getElementById("mapScreen");
 
-const canvas =
-    document.getElementById("gameCanvas");
+const playButton = document.getElementById("playButton");
+const restartButton = document.getElementById("restartButton");
+const mapButton = document.getElementById("mapButton");
 
-const ctx =
-    canvas.getContext("2d");
-
-const game =
-    document.getElementById("game");
-
-const mapScreen =
-    document.getElementById("mapScreen");
-
-const playButton =
-    document.getElementById("playButton");
-
-const restartButton =
-    document.getElementById("restartButton");
-
-const mapButton =
-    document.getElementById("mapButton");
-
-const scoreDisplay =
-    document.getElementById("score");
-
-const livesDisplay =
-    document.getElementById("lives");
-
-const currentMapDisplay =
-    document.getElementById("currentMap");
+const scoreDisplay = document.getElementById("score");
+const livesDisplay = document.getElementById("lives");
+const currentMapDisplay = document.getElementById("currentMap");
 
 
 /* =========================================================
@@ -43,11 +22,8 @@ const currentMapDisplay =
 ========================================================= */
 
 const COLS = 31;
-
 const ROWS = 17;
-
-const TILE =
-    canvas.width / COLS;
+const TILE = canvas.width / COLS;
 
 
 /* =========================================================
@@ -55,25 +31,20 @@ const TILE =
 ========================================================= */
 
 const BLUE = "#064cff";
-
 const BRIGHT_BLUE = "#174fff";
-
 const YELLOW = "#ffe600";
-
 const PELLET = "#ffe9a8";
 
 
 /* =========================================================
-   MAP DATA
+   MAPS
 ========================================================= */
 
 const MAP_NAMES = [
-
     "OARADHI",
     "RADHIRA",
     "RUZRUN",
     "WARUN"
-
 ];
 
 
@@ -175,22 +146,18 @@ let selectedMap = "OARADHI";
 let maze = [];
 
 let pellets = new Set();
-
 let powerPellets = new Set();
 
 let score = 0;
-
 let lives = 3;
 
-let gameRunning = false;
-
 let level = 1;
+
+let gameRunning = false;
 
 let frightenedTimer = 0;
 
 let lastTime = 0;
-
-let pelletCount = 0;
 
 
 /* =========================================================
@@ -200,17 +167,14 @@ let pelletCount = 0;
 const pacman = {
 
     x: 15.5,
-
     y: 15.5,
 
     direction: "left",
-
     nextDirection: "left",
 
     speed: 7,
 
     mouth: 0,
-
     mouthDirection: 1
 
 };
@@ -222,14 +186,11 @@ const pacman = {
 
 let ghosts = [];
 
-
 const ghostColours = [
-
     "#ff3030",
     "#ff8bd8",
     "#20e6ff",
     "#ffad20"
-
 ];
 
 
@@ -279,36 +240,26 @@ function opposite(direction) {
 
 
 /* =========================================================
-   CREATE MAP
+   MAP CREATION
 ========================================================= */
 
 function createMap(word) {
 
-    maze =
-        Array.from(
-            {
-                length: ROWS
-            },
-            () =>
-                Array(COLS).fill(" ")
-        );
+    maze = Array.from(
+        {
+            length: ROWS
+        },
+        () => Array(COLS).fill(" ")
+    );
 
 
-    /* -----------------------------------------------------
+    /* =====================================================
        OUTER BORDER
-    ----------------------------------------------------- */
+    ===================================================== */
 
-    for (
-        let y = 0;
-        y < ROWS;
-        y++
-    ) {
+    for (let y = 0; y < ROWS; y++) {
 
-        for (
-            let x = 0;
-            x < COLS;
-            x++
-        ) {
+        for (let x = 0; x < COLS; x++) {
 
             if (
                 x === 0 ||
@@ -326,212 +277,104 @@ function createMap(word) {
     }
 
 
-    /* -----------------------------------------------------
+    /* =====================================================
        TUNNEL
-    ----------------------------------------------------- */
+    ===================================================== */
 
     maze[8][0] = "T";
-
     maze[8][1] = " ";
 
     maze[8][COLS - 2] = " ";
-
     maze[8][COLS - 1] = "T";
 
 
-    /* -----------------------------------------------------
-       HORIZONTAL MAZE WALLS
-    ----------------------------------------------------- */
+    /* =====================================================
+       HORIZONTAL WALLS
+    ===================================================== */
 
-    addHorizontalWall(
-        2,
-        2,
-        8
-    );
+    addHorizontalWall(2, 2, 8);
+    addHorizontalWall(2, 12, 18);
+    addHorizontalWall(2, 22, 28);
 
-    addHorizontalWall(
-        2,
-        12,
-        18
-    );
+    addHorizontalWall(10, 2, 8);
+    addHorizontalWall(10, 22, 28);
 
-    addHorizontalWall(
-        2,
-        22,
-        28
-    );
+    addHorizontalWall(14, 2, 8);
+    addHorizontalWall(14, 11, 20);
+    addHorizontalWall(14, 23, 28);
 
 
-    addHorizontalWall(
-        10,
-        2,
-        8
-    );
+    /* =====================================================
+       VERTICAL WALLS
+    ===================================================== */
 
-    addHorizontalWall(
-        10,
-        22,
-        28
-    );
+    addVerticalWall(4, 3, 5);
+    addVerticalWall(9, 1, 3);
+    addVerticalWall(21, 1, 3);
+    addVerticalWall(26, 3, 5);
 
-
-    addHorizontalWall(
-        14,
-        2,
-        8
-    );
-
-    addHorizontalWall(
-        14,
-        11,
-        20
-    );
-
-    addHorizontalWall(
-        14,
-        23,
-        28
-    );
+    addVerticalWall(4, 10, 13);
+    addVerticalWall(9, 12, 14);
+    addVerticalWall(21, 12, 14);
+    addVerticalWall(26, 10, 13);
 
 
-    /* -----------------------------------------------------
-       VERTICAL MAZE WALLS
-    ----------------------------------------------------- */
-
-    addVerticalWall(
-        4,
-        3,
-        5
-    );
-
-    addVerticalWall(
-        9,
-        1,
-        3
-    );
-
-    addVerticalWall(
-        21,
-        1,
-        3
-    );
-
-    addVerticalWall(
-        26,
-        3,
-        5
-    );
-
-
-    addVerticalWall(
-        4,
-        10,
-        13
-    );
-
-    addVerticalWall(
-        9,
-        12,
-        14
-    );
-
-    addVerticalWall(
-        21,
-        12,
-        14
-    );
-
-    addVerticalWall(
-        26,
-        10,
-        13
-    );
-
-
-    /* -----------------------------------------------------
-       GIANT WORD
-    ----------------------------------------------------- */
+    /* =====================================================
+       WORD
+    ===================================================== */
 
     drawWordWalls(word);
 
 
-    /* -----------------------------------------------------
+    /* =====================================================
        GHOST HOUSE
-    ----------------------------------------------------- */
+    ===================================================== */
 
     createGhostHouse();
 
 
-    /* -----------------------------------------------------
-       OPEN PACMAN AREA
-    ----------------------------------------------------- */
+    /* =====================================================
+       PACMAN START AREA
+    ===================================================== */
 
     maze[15][14] = " ";
-
     maze[15][15] = " ";
-
     maze[15][16] = " ";
 
     maze[14][15] = " ";
-
     maze[13][15] = " ";
 
 
-    /* -----------------------------------------------------
-       MAKE SURE TUNNEL IS OPEN
-    ----------------------------------------------------- */
+    /* =====================================================
+       TUNNEL AGAIN
+    ===================================================== */
 
     maze[8][0] = "T";
-
     maze[8][1] = " ";
 
     maze[8][COLS - 2] = " ";
-
     maze[8][COLS - 1] = "T";
 
 
-    /* -----------------------------------------------------
+    /* =====================================================
        PELLETS
-    ----------------------------------------------------- */
+    ===================================================== */
 
     pellets.clear();
-
     powerPellets.clear();
 
 
-    for (
-        let y = 1;
-        y < ROWS - 1;
-        y++
-    ) {
+    for (let y = 1; y < ROWS - 1; y++) {
 
-        for (
-            let x = 1;
-            x < COLS - 1;
-            x++
-        ) {
+        for (let x = 1; x < COLS - 1; x++) {
 
-            if (
-                maze[y][x] !== "#"
-            ) {
+            if (maze[y][x] !== "#") {
 
-                if (
-                    !isInsideGhostHouse(
-                        x,
-                        y
-                    )
-                ) {
+                if (!isInsideGhostHouse(x, y)) {
 
-                    if (
-                        !(
-                            x === 15 &&
-                            y === 15
-                        )
-                    ) {
+                    if (!(x === 15 && y === 15)) {
 
-                        pellets.add(
-                            `${x},${y}`
-                        );
+                        pellets.add(`${x},${y}`);
 
                     }
 
@@ -544,66 +387,53 @@ function createMap(word) {
     }
 
 
-    /* -----------------------------------------------------
+    /* =====================================================
        POWER PELLETS
-    ----------------------------------------------------- */
+    ===================================================== */
 
     const powerPositions = [
 
         [1, 1],
-
         [29, 1],
-
         [1, 15],
-
         [29, 15]
 
     ];
 
 
-    powerPositions.forEach(
-        ([x, y]) => {
+    powerPositions.forEach(([x, y]) => {
 
-            if (
-                maze[y][x] !== "#"
-            ) {
+        if (maze[y][x] !== "#") {
 
-                powerPellets.add(
-                    `${x},${y}`
-                );
+            powerPellets.add(`${x},${y}`);
 
-                pellets.delete(
-                    `${x},${y}`
-                );
-
-            }
+            pellets.delete(`${x},${y}`);
 
         }
-    );
 
-
-    pelletCount =
-        pellets.size +
-        powerPellets.size;
+    });
 
 }
 
 
 /* =========================================================
-   HORIZONTAL WALL
+   WALL HELPERS
 ========================================================= */
 
-function addHorizontalWall(
-    y,
-    start,
-    end
-) {
+function addHorizontalWall(y, start, end) {
 
-    for (
-        let x = start;
-        x <= end;
-        x++
-    ) {
+    for (let x = start; x <= end; x++) {
+
+        maze[y][x] = "#";
+
+    }
+
+}
+
+
+function addVerticalWall(x, start, end) {
+
+    for (let y = start; y <= end; y++) {
 
         maze[y][x] = "#";
 
@@ -613,71 +443,35 @@ function addHorizontalWall(
 
 
 /* =========================================================
-   VERTICAL WALL
-========================================================= */
-
-function addVerticalWall(
-    x,
-    start,
-    end
-) {
-
-    for (
-        let y = start;
-        y <= end;
-        y++
-    ) {
-
-        maze[y][x] = "#";
-
-    }
-
-}
-
-
-/* =========================================================
-   DRAW WORD WALLS
+   WORD WALLS
 ========================================================= */
 
 function drawWordWalls(word) {
 
-    let width =
+    const width =
         word.length * 3 +
         (word.length - 1);
 
-
-    let startX =
+    const startX =
         Math.floor(
             (COLS - width) / 2
         );
 
-
     let xPosition = startX;
 
 
-    for (
-        const letter of word
-    ) {
+    for (const letter of word) {
 
-        const design =
-            LETTERS[letter];
+        const design = LETTERS[letter];
+
+        if (!design) continue;
 
 
-        for (
-            let row = 0;
-            row < 5;
-            row++
-        ) {
+        for (let row = 0; row < 5; row++) {
 
-            for (
-                let col = 0;
-                col < 3;
-                col++
-            ) {
+            for (let col = 0; col < 3; col++) {
 
-                if (
-                    design[row][col] === "1"
-                ) {
+                if (design[row][col] === "1") {
 
                     const x =
                         xPosition + col;
@@ -703,7 +497,6 @@ function drawWordWalls(word) {
 
         }
 
-
         xPosition += 4;
 
     }
@@ -717,59 +510,41 @@ function drawWordWalls(word) {
 
 function createGhostHouse() {
 
-    /* Top */
+    /* TOP */
 
-    for (
-        let x = 12;
-        x <= 18;
-        x++
-    ) {
+    for (let x = 12; x <= 18; x++) {
 
         maze[10][x] = "#";
 
     }
 
 
-    /* Bottom */
+    /* BOTTOM */
 
-    for (
-        let x = 12;
-        x <= 18;
-        x++
-    ) {
+    for (let x = 12; x <= 18; x++) {
 
         maze[13][x] = "#";
 
     }
 
 
-    /* Left */
+    /* LEFT */
 
     maze[11][12] = "#";
-
     maze[12][12] = "#";
 
 
-    /* Right */
+    /* RIGHT */
 
     maze[11][18] = "#";
-
     maze[12][18] = "#";
 
 
-    /* Interior */
+    /* INTERIOR */
 
-    for (
-        let y = 11;
-        y <= 12;
-        y++
-    ) {
+    for (let y = 11; y <= 12; y++) {
 
-        for (
-            let x = 13;
-            x <= 17;
-            x++
-        ) {
+        for (let x = 13; x <= 17; x++) {
 
             maze[y][x] = " ";
 
@@ -778,21 +553,14 @@ function createGhostHouse() {
     }
 
 
-    /* Door */
+    /* DOOR */
 
     maze[10][15] = " ";
 
 }
 
 
-/* =========================================================
-   GHOST HOUSE CHECK
-========================================================= */
-
-function isInsideGhostHouse(
-    x,
-    y
-) {
+function isInsideGhostHouse(x, y) {
 
     return (
         x >= 13 &&
@@ -811,9 +579,7 @@ function isInsideGhostHouse(
 function startGame() {
 
     score = 0;
-
     lives = 3;
-
     level = 1;
 
     frightenedTimer = 0;
@@ -825,31 +591,21 @@ function startGame() {
         selectedMap;
 
 
-    createMap(
-        selectedMap
-    );
-
+    createMap(selectedMap);
 
     resetCharacters();
-
 
     updateHUD();
 
 
-    mapScreen.style.display =
-        "none";
+    mapScreen.style.display = "none";
 
-    game.style.display =
-        "flex";
+    game.style.display = "flex";
 
 
-    lastTime =
-        performance.now();
+    lastTime = performance.now();
 
-
-    requestAnimationFrame(
-        gameLoop
-    );
+    requestAnimationFrame(gameLoop);
 
 }
 
@@ -861,11 +617,9 @@ function startGame() {
 function resetCharacters() {
 
     pacman.x = 15.5;
-
     pacman.y = 15.5;
 
     pacman.direction = "left";
-
     pacman.nextDirection = "left";
 
 
@@ -874,21 +628,21 @@ function resetCharacters() {
         createGhost(
             15,
             11,
-            "left",
+            "up",
             0
         ),
 
         createGhost(
             14,
             11,
-            "right",
+            "left",
             1
         ),
 
         createGhost(
             16,
             11,
-            "left",
+            "right",
             2
         ),
 
@@ -918,10 +672,9 @@ function createGhost(
     return {
 
         x: x + 0.5,
-
         y: y + 0.5,
 
-        direction,
+        direction: direction,
 
         speed: 5.2,
 
@@ -930,7 +683,10 @@ function createGhost(
 
         home: true,
 
-        index
+        homeTimer:
+            index * 0.7,
+
+        index: index
 
     };
 
@@ -962,8 +718,11 @@ function gameLoop(time) {
     lastTime = time;
 
 
-    frightenedTimer -=
-        delta;
+    if (frightenedTimer > 0) {
+
+        frightenedTimer -= delta;
+
+    }
 
 
     updatePacman(delta);
@@ -979,24 +738,18 @@ function gameLoop(time) {
     draw();
 
 
-    requestAnimationFrame(
-        gameLoop
-    );
+    requestAnimationFrame(gameLoop);
 
 }
 
 
 /* =========================================================
-   PACMAN UPDATE
+   PACMAN
 ========================================================= */
 
 function updatePacman(delta) {
 
-    const next =
-        DIRECTIONS[
-            pacman.nextDirection
-        ];
-
+    /* Try requested direction */
 
     if (
         canMove(
@@ -1012,10 +765,8 @@ function updatePacman(delta) {
     }
 
 
-    const direction =
-        DIRECTIONS[
-            pacman.direction
-        ];
+    const dir =
+        DIRECTIONS[pacman.direction];
 
 
     if (
@@ -1027,32 +778,27 @@ function updatePacman(delta) {
     ) {
 
         pacman.x +=
-            direction.x *
+            dir.x *
             pacman.speed *
             delta;
 
         pacman.y +=
-            direction.y *
+            dir.y *
             pacman.speed *
             delta;
 
     }
 
 
-    handleTunnel(
-        pacman
-    );
+    handleTunnel(pacman);
 
-
-    snapAtIntersection(
-        pacman
-    );
+    alignCharacter(pacman);
 
 }
 
 
 /* =========================================================
-   CAN MOVE
+   MOVEMENT COLLISION
 ========================================================= */
 
 function canMove(
@@ -1064,16 +810,18 @@ function canMove(
     const dir =
         DIRECTIONS[direction];
 
+    if (!dir) return false;
+
 
     const nx =
         x +
         dir.x *
-        0.55;
+        0.51;
 
     const ny =
         y +
         dir.y *
-        0.55;
+        0.51;
 
 
     const tileX =
@@ -1083,11 +831,11 @@ function canMove(
         Math.floor(ny);
 
 
+    /* Tunnel */
+
     if (
-        tileX < 0 ||
-        tileX >= COLS ||
-        tileY < 0 ||
-        tileY >= ROWS
+        tileY === 8 &&
+        (tileX < 0 || tileX >= COLS)
     ) {
 
         return true;
@@ -1095,9 +843,56 @@ function canMove(
     }
 
 
-    return (
-        maze[tileY][tileX] !== "#"
-    );
+    if (
+        tileX < 0 ||
+        tileX >= COLS ||
+        tileY < 0 ||
+        tileY >= ROWS
+    ) {
+
+        return false;
+
+    }
+
+
+    return maze[tileY][tileX] !== "#";
+
+}
+
+
+/* =========================================================
+   ALIGN TO TILE CENTRE
+========================================================= */
+
+function alignCharacter(character) {
+
+    const centerX =
+        Math.floor(character.x) + 0.5;
+
+    const centerY =
+        Math.floor(character.y) + 0.5;
+
+
+    if (
+        Math.abs(
+            character.x - centerX
+        ) < 0.08
+    ) {
+
+        character.x = centerX;
+
+    }
+
+
+    if (
+        Math.abs(
+            character.y - centerY
+        ) < 0.08
+    ) {
+
+        character.y = centerY;
+
+    }
 
 }
 
@@ -1106,13 +901,9 @@ function canMove(
    TUNNEL
 ========================================================= */
 
-function handleTunnel(
-    character
-) {
+function handleTunnel(character) {
 
-    if (
-        character.x < -0.5
-    ) {
+    if (character.x < -0.5) {
 
         character.x =
             COLS - 0.5;
@@ -1120,49 +911,9 @@ function handleTunnel(
     }
 
 
-    if (
-        character.x >
-        COLS - 0.5
-    ) {
+    if (character.x > COLS - 0.5) {
 
-        character.x =
-            -0.5;
-
-    }
-
-}
-
-
-/* =========================================================
-   SNAP
-========================================================= */
-
-function snapAtIntersection(
-    character
-) {
-
-    if (
-        Math.abs(
-            character.x -
-            Math.round(character.x)
-        ) < 0.08
-    ) {
-
-        character.x =
-            Math.round(character.x);
-
-    }
-
-
-    if (
-        Math.abs(
-            character.y -
-            Math.round(character.y)
-        ) < 0.08
-    ) {
-
-        character.y =
-            Math.round(character.y);
+        character.x = -0.5;
 
     }
 
@@ -1175,173 +926,200 @@ function snapAtIntersection(
 
 function updateGhosts(delta) {
 
-    ghosts.forEach(
-        ghost => {
+    ghosts.forEach(ghost => {
 
-            if (
-                ghost.home
-            ) {
+        /* =================================================
+           GHOST HOUSE
+        ================================================= */
+
+        if (ghost.home) {
+
+            ghost.homeTimer -= delta;
+
+
+            /* Move vertically inside house */
+
+            if (ghost.homeTimer <= 0) {
 
                 ghost.y -=
-                    delta * 0.8;
-
-                if (
-                    ghost.y <= 10.5
-                ) {
-
-                    ghost.home =
-                        false;
-
-                    ghost.y =
-                        9.5;
-
-                }
-
-                return;
+                    delta * 1.2;
 
             }
 
 
-            const possible =
-                getPossibleDirections(
-                    ghost
-                );
+            /* Leave through door */
 
+            if (ghost.y <= 10.5) {
 
-            if (
-                possible.length === 0
-            ) {
+                ghost.y = 9.5;
 
-                return;
+                ghost.x = 15.5;
 
-            }
+                ghost.direction = "left";
 
-
-            const current =
-                ghost.direction;
-
-
-            const reverse =
-                opposite(
-                    current
-                );
-
-
-            let choices =
-                possible.filter(
-                    direction =>
-                        direction !==
-                        reverse
-                );
-
-
-            if (
-                choices.length === 0
-            ) {
-
-                choices =
-                    possible;
+                ghost.home = false;
 
             }
 
-
-            /* Change direction near intersections */
-
-            if (
-                isNearCenter(
-                    ghost
-                )
-            ) {
-
-                if (
-                    Math.random() <
-                    0.18
-                ) {
-
-                    ghost.direction =
-                        chooseGhostDirection(
-                            ghost,
-                            choices
-                        );
-
-                }
-
-            }
-
-
-            const dir =
-                DIRECTIONS[
-                    ghost.direction
-                ];
-
-
-            if (
-                canMove(
-                    ghost.x,
-                    ghost.y,
-                    ghost.direction
-                )
-            ) {
-
-                ghost.x +=
-                    dir.x *
-                    ghost.speed *
-                    delta;
-
-                ghost.y +=
-                    dir.y *
-                    ghost.speed *
-                    delta;
-
-            }
-
-
-            handleTunnel(
-                ghost
-            );
-
-
-            snapAtIntersection(
-                ghost
-            );
+            return;
 
         }
-    );
+
+
+        /* =================================================
+           GET AVAILABLE DIRECTIONS
+        ================================================= */
+
+        const possible =
+            getPossibleDirections(ghost);
+
+
+        if (possible.length === 0) {
+
+            return;
+
+        }
+
+
+        const reverse =
+            opposite(
+                ghost.direction
+            );
+
+
+        let choices =
+            possible.filter(
+                direction =>
+                    direction !== reverse
+            );
+
+
+        if (choices.length === 0) {
+
+            choices = possible;
+
+        }
+
+
+        /* =================================================
+           CHECK IF CURRENT DIRECTION IS BLOCKED
+        ================================================= */
+
+        const currentAvailable =
+            possible.includes(
+                ghost.direction
+            );
+
+
+        const atIntersection =
+            isNearCenter(ghost) &&
+            choices.length > 1;
+
+
+        /* =================================================
+           FORCE TURN WHEN BLOCKED
+        ================================================= */
+
+        if (
+            !currentAvailable
+        ) {
+
+            ghost.direction =
+                chooseGhostDirection(
+                    ghost,
+                    choices
+                );
+
+        }
+
+
+        /* =================================================
+           RANDOM / CHASE DECISION
+        ================================================= */
+
+        else if (atIntersection) {
+
+            if (
+                Math.random() < 0.45
+            ) {
+
+                ghost.direction =
+                    chooseGhostDirection(
+                        ghost,
+                        choices
+                    );
+
+            }
+
+        }
+
+
+        /* =================================================
+           MOVE
+        ================================================= */
+
+        const dir =
+            DIRECTIONS[
+                ghost.direction
+            ];
+
+
+        if (
+            canMove(
+                ghost.x,
+                ghost.y,
+                ghost.direction
+            )
+        ) {
+
+            ghost.x +=
+                dir.x *
+                ghost.speed *
+                delta;
+
+            ghost.y +=
+                dir.y *
+                ghost.speed *
+                delta;
+
+        }
+
+
+        handleTunnel(ghost);
+
+        alignCharacter(ghost);
+
+    });
 
 }
 
 
 /* =========================================================
-   POSSIBLE GHOST DIRECTIONS
+   POSSIBLE DIRECTIONS
 ========================================================= */
 
-function getPossibleDirections(
-    ghost
-) {
+function getPossibleDirections(ghost) {
 
     const result = [];
 
-    Object.keys(
-        DIRECTIONS
-    ).forEach(
-        direction => {
 
-            if (
-                canMove(
-                    ghost.x,
-                    ghost.y,
-                    direction
-                )
-            ) {
+    for (
+        const direction of Object.keys(DIRECTIONS)
+    ) {
 
-                result.push(
-                    direction
-                );
+        if (
+            canMove(
+                ghost.x,
+                ghost.y,
+                direction
+            )
+        ) {
 
-            }
+            result.push(direction);
 
         }
-    );
+
+    }
 
 
     return result;
@@ -1358,9 +1136,16 @@ function chooseGhostDirection(
     choices
 ) {
 
-    if (
-        frightenedTimer > 0
-    ) {
+    if (!choices.length) {
+
+        return ghost.direction;
+
+    }
+
+
+    /* Frightened = random */
+
+    if (frightenedTimer > 0) {
 
         return choices[
             Math.floor(
@@ -1372,80 +1157,83 @@ function chooseGhostDirection(
     }
 
 
-    let best =
+    /* =====================================================
+       CHASE PACMAN
+    ===================================================== */
+
+    let bestDirection =
         choices[0];
 
     let bestDistance =
         Infinity;
 
 
-    choices.forEach(
-        direction => {
+    choices.forEach(direction => {
 
-            const dir =
-                DIRECTIONS[
-                    direction
-                ];
+        const dir =
+            DIRECTIONS[direction];
 
 
-            const tx =
-                ghost.x +
-                dir.x * 3;
+        const targetX =
+            ghost.x +
+            dir.x * 4;
 
 
-            const ty =
-                ghost.y +
-                dir.y * 3;
+        const targetY =
+            ghost.y +
+            dir.y * 4;
 
 
-            const distance =
-                Math.hypot(
-                    pacman.x - tx,
-                    pacman.y - ty
-                );
+        const distance =
+            Math.hypot(
+                pacman.x - targetX,
+                pacman.y - targetY
+            );
 
 
-            if (
-                distance <
-                bestDistance
-            ) {
+        if (
+            distance <
+            bestDistance
+        ) {
 
-                bestDistance =
-                    distance;
+            bestDistance =
+                distance;
 
-                best =
-                    direction;
-
-            }
+            bestDirection =
+                direction;
 
         }
-    );
+
+    });
 
 
-    return best;
+    return bestDirection;
 
 }
 
 
 /* =========================================================
-   INTERSECTION CHECK
+   INTERSECTION
 ========================================================= */
 
-function isNearCenter(
-    character
-) {
+function isNearCenter(character) {
+
+    const centerX =
+        Math.floor(character.x) + 0.5;
+
+    const centerY =
+        Math.floor(character.y) + 0.5;
+
 
     return (
 
         Math.abs(
-            character.x -
-            Math.round(character.x)
-        ) < 0.1 &&
+            character.x - centerX
+        ) < 0.08 &&
 
         Math.abs(
-            character.y -
-            Math.round(character.y)
-        ) < 0.1
+            character.y - centerY
+        ) < 0.08
 
     );
 
@@ -1459,23 +1247,17 @@ function isNearCenter(
 function checkPellets() {
 
     const x =
-        Math.floor(
-            pacman.x
-        );
+        Math.floor(pacman.x);
 
     const y =
-        Math.floor(
-            pacman.y
-        );
+        Math.floor(pacman.y);
 
 
     const key =
         `${x},${y}`;
 
 
-    if (
-        pellets.has(key)
-    ) {
+    if (pellets.has(key)) {
 
         pellets.delete(key);
 
@@ -1486,9 +1268,7 @@ function checkPellets() {
     }
 
 
-    if (
-        powerPellets.has(key)
-    ) {
+    if (powerPellets.has(key)) {
 
         powerPellets.delete(key);
 
@@ -1521,9 +1301,7 @@ function nextLevel() {
 
     level++;
 
-    createMap(
-        selectedMap
-    );
+    createMap(selectedMap);
 
     resetCharacters();
 
@@ -1536,52 +1314,52 @@ function nextLevel() {
 
 function checkGhostCollision() {
 
-    ghosts.forEach(
-        ghost => {
+    ghosts.forEach(ghost => {
 
-            const distance =
-                Math.hypot(
-                    pacman.x -
-                    ghost.x,
-
-                    pacman.y -
-                    ghost.y
-                );
+        const distance =
+            Math.hypot(
+                pacman.x - ghost.x,
+                pacman.y - ghost.y
+            );
 
 
-            if (
-                distance < 0.65
-            ) {
+        if (distance < 0.65) {
 
-                if (
-                    frightenedTimer > 0
-                ) {
+            /* =================================================
+               EAT GHOST
+            ================================================= */
 
-                    score += 200;
+            if (frightenedTimer > 0) {
 
-                    ghost.x =
-                        15.5;
+                score += 200;
 
-                    ghost.y =
-                        11.5;
+                ghost.x = 15.5;
+                ghost.y = 11.5;
 
-                    ghost.home =
-                        true;
+                ghost.direction = "up";
 
-                    updateHUD();
+                ghost.home = true;
 
-                }
+                ghost.homeTimer = 1;
 
-                else {
+                updateHUD();
 
-                    loseLife();
+            }
 
-                }
+
+            /* =================================================
+               PACMAN HIT
+            ================================================= */
+
+            else {
+
+                loseLife();
 
             }
 
         }
-    );
+
+    });
 
 }
 
@@ -1597,9 +1375,7 @@ function loseLife() {
     updateHUD();
 
 
-    if (
-        lives <= 0
-    ) {
+    if (lives <= 0) {
 
         gameOver();
 
@@ -1623,22 +1399,20 @@ function gameOver() {
 
     draw();
 
-    setTimeout(
-        () => {
 
-            alert(
-                `GAME OVER!\n\nScore: ${score}`
-            );
+    setTimeout(() => {
 
-        },
-        100
-    );
+        alert(
+            `GAME OVER!\n\nScore: ${score}`
+        );
+
+    }, 100);
 
 }
 
 
 /* =========================================================
-   MOUTH
+   PACMAN MOUTH
 ========================================================= */
 
 function updateMouth(delta) {
@@ -1649,26 +1423,20 @@ function updateMouth(delta) {
         10;
 
 
-    if (
-        pacman.mouth > 1
-    ) {
+    if (pacman.mouth > 1) {
 
         pacman.mouth = 1;
 
-        pacman.mouthDirection =
-            -1;
+        pacman.mouthDirection = -1;
 
     }
 
 
-    if (
-        pacman.mouth < 0
-    ) {
+    if (pacman.mouth < 0) {
 
         pacman.mouth = 0;
 
-        pacman.mouthDirection =
-            1;
+        pacman.mouthDirection = 1;
 
     }
 
@@ -1676,7 +1444,7 @@ function updateMouth(delta) {
 
 
 /* =========================================================
-   DRAW EVERYTHING
+   DRAW
 ========================================================= */
 
 function draw() {
@@ -1706,12 +1474,6 @@ function draw() {
 
 function drawMaze() {
 
-    ctx.lineWidth = 2;
-
-    ctx.strokeStyle =
-        BLUE;
-
-
     for (
         let y = 0;
         y < ROWS;
@@ -1728,10 +1490,7 @@ function drawMaze() {
                 maze[y][x] === "#"
             ) {
 
-                drawWall(
-                    x,
-                    y
-                );
+                drawWall(x, y);
 
             }
 
@@ -1742,8 +1501,7 @@ function drawMaze() {
 
     /* Tunnel openings */
 
-    ctx.fillStyle =
-        "#000";
+    ctx.fillStyle = "#000";
 
     ctx.fillRect(
         0,
@@ -1762,8 +1520,7 @@ function drawMaze() {
 
     /* Ghost door */
 
-    ctx.strokeStyle =
-        "#ff8bd8";
+    ctx.strokeStyle = "#ff8bd8";
 
     ctx.lineWidth = 3;
 
@@ -1785,13 +1542,10 @@ function drawMaze() {
 
 
 /* =========================================================
-   WALL DRAWING
+   WALL
 ========================================================= */
 
-function drawWall(
-    x,
-    y
-) {
+function drawWall(x, y) {
 
     const px =
         x * TILE;
@@ -1830,7 +1584,7 @@ function drawWall(
 
 
 /* =========================================================
-   DRAW PELLETS
+   PELLETS
 ========================================================= */
 
 function drawPellets() {
@@ -1839,89 +1593,73 @@ function drawPellets() {
         PELLET;
 
 
-    pellets.forEach(
-        key => {
+    pellets.forEach(key => {
 
-            const [
-                x,
-                y
-            ] =
-                key
-                .split(",")
-                .map(Number);
-
-
-            ctx.beginPath();
-
-            ctx.arc(
-                x * TILE +
-                TILE / 2,
-
-                y * TILE +
-                TILE / 2,
-
-                2,
-
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fill();
-
-        }
-    );
+        const [
+            x,
+            y
+        ] =
+            key
+            .split(",")
+            .map(Number);
 
 
-    powerPellets.forEach(
-        key => {
+        ctx.beginPath();
 
-            const [
-                x,
-                y
-            ] =
-                key
-                .split(",")
-                .map(Number);
+        ctx.arc(
+            x * TILE + TILE / 2,
+            y * TILE + TILE / 2,
+            2,
+            0,
+            Math.PI * 2
+        );
 
+        ctx.fill();
 
-            const pulse =
-                5 +
-                Math.sin(
-                    performance.now() /
-                    150
-                ) *
-                1.5;
+    });
 
 
-            ctx.fillStyle =
-                "#fff1a8";
+    powerPellets.forEach(key => {
+
+        const [
+            x,
+            y
+        ] =
+            key
+            .split(",")
+            .map(Number);
 
 
-            ctx.beginPath();
+        const pulse =
+            5 +
+            Math.sin(
+                performance.now() / 150
+            ) * 1.5;
 
-            ctx.arc(
-                x * TILE +
-                TILE / 2,
 
-                y * TILE +
-                TILE / 2,
+        ctx.fillStyle =
+            "#fff1a8";
 
-                pulse,
 
-                0,
-                Math.PI * 2
-            );
+        ctx.beginPath();
 
-            ctx.fill();
+        ctx.arc(
+            x * TILE + TILE / 2,
+            y * TILE + TILE / 2,
+            pulse,
+            0,
+            Math.PI * 2
+        );
 
-        }
-    );
+        ctx.fill();
+
+    });
 
 }
 
 
 /* =========================================================
-   DRAW PACMAN
+   PACMAN
 ========================================================= */
 
 function drawPacman() {
@@ -1940,31 +1678,22 @@ function drawPacman() {
     let angle = 0;
 
 
-    if (
-        pacman.direction === "right"
-    )
+    if (pacman.direction === "right")
         angle = 0;
 
-    if (
-        pacman.direction === "down"
-    )
+    if (pacman.direction === "down")
         angle = Math.PI / 2;
 
-    if (
-        pacman.direction === "left"
-    )
+    if (pacman.direction === "left")
         angle = Math.PI;
 
-    if (
-        pacman.direction === "up"
-    )
+    if (pacman.direction === "up")
         angle = -Math.PI / 2;
 
 
     const mouth =
         0.25 +
-        pacman.mouth *
-        0.25;
+        pacman.mouth * 0.25;
 
 
     ctx.fillStyle =
@@ -1998,145 +1727,141 @@ function drawPacman() {
 
 
 /* =========================================================
-   DRAW GHOSTS
+   GHOSTS
 ========================================================= */
 
 function drawGhosts() {
 
-    ghosts.forEach(
-        ghost => {
+    ghosts.forEach(ghost => {
 
-            const px =
-                ghost.x * TILE;
+        const px =
+            ghost.x * TILE;
 
-            const py =
-                ghost.y * TILE;
+        const py =
+            ghost.y * TILE;
 
-            const radius =
-                TILE * 0.4;
-
-
-            let colour =
-                ghost.colour;
+        const radius =
+            TILE * 0.4;
 
 
-            if (
-                frightenedTimer > 0
-            ) {
-
-                colour =
-                    Math.floor(
-                        frightenedTimer * 8
-                    ) % 2 === 0
-                        ? "#174fff"
-                        : "#fff";
-
-            }
+        let colour =
+            ghost.colour;
 
 
-            ctx.fillStyle =
-                colour;
+        if (frightenedTimer > 0) {
 
-
-            ctx.beginPath();
-
-            ctx.arc(
-                px,
-                py - 1,
-                radius,
-                Math.PI,
-                0
-            );
-
-
-            ctx.lineTo(
-                px + radius,
-                py + radius
-            );
-
-
-            ctx.lineTo(
-                px + radius * 0.5,
-                py + radius * 0.7
-            );
-
-
-            ctx.lineTo(
-                px,
-                py + radius
-            );
-
-
-            ctx.lineTo(
-                px - radius * 0.5,
-                py + radius * 0.7
-            );
-
-
-            ctx.lineTo(
-                px - radius,
-                py + radius
-            );
-
-
-            ctx.closePath();
-
-            ctx.fill();
-
-
-            /* Eyes */
-
-            ctx.fillStyle =
-                "white";
-
-
-            ctx.beginPath();
-
-            ctx.arc(
-                px - radius * 0.35,
-                py - radius * 0.05,
-                radius * 0.2,
-                0,
-                Math.PI * 2
-            );
-
-            ctx.arc(
-                px + radius * 0.35,
-                py - radius * 0.05,
-                radius * 0.2,
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fill();
-
-
-            ctx.fillStyle =
-                "#222";
-
-
-            ctx.beginPath();
-
-            ctx.arc(
-                px - radius * 0.3,
-                py - radius * 0.05,
-                radius * 0.09,
-                0,
-                Math.PI * 2
-            );
-
-            ctx.arc(
-                px + radius * 0.3,
-                py - radius * 0.05,
-                radius * 0.09,
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fill();
+            colour =
+                Math.floor(
+                    frightenedTimer * 8
+                ) % 2 === 0
+                    ? "#174fff"
+                    : "#fff";
 
         }
-    );
+
+
+        ctx.fillStyle =
+            colour;
+
+
+        /* HEAD */
+
+        ctx.beginPath();
+
+        ctx.arc(
+            px,
+            py - 1,
+            radius,
+            Math.PI,
+            0
+        );
+
+
+        /* BODY */
+
+        ctx.lineTo(
+            px + radius,
+            py + radius
+        );
+
+        ctx.lineTo(
+            px + radius * 0.5,
+            py + radius * 0.7
+        );
+
+        ctx.lineTo(
+            px,
+            py + radius
+        );
+
+        ctx.lineTo(
+            px - radius * 0.5,
+            py + radius * 0.7
+        );
+
+        ctx.lineTo(
+            px - radius,
+            py + radius
+        );
+
+
+        ctx.closePath();
+
+        ctx.fill();
+
+
+        /* EYES */
+
+        ctx.fillStyle = "white";
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            px - radius * 0.35,
+            py - radius * 0.05,
+            radius * 0.2,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.arc(
+            px + radius * 0.35,
+            py - radius * 0.05,
+            radius * 0.2,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+
+        /* PUPILS */
+
+        ctx.fillStyle = "#222";
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            px - radius * 0.3,
+            py - radius * 0.05,
+            radius * 0.09,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.arc(
+            px + radius * 0.3,
+            py - radius * 0.05,
+            radius * 0.09,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+    });
 
 }
 
@@ -2153,10 +1878,7 @@ function updateHUD() {
 
     livesDisplay.textContent =
         "❤️ ".repeat(
-            Math.max(
-                lives,
-                0
-            )
+            Math.max(lives, 0)
         );
 
 }
@@ -2230,11 +1952,10 @@ document.addEventListener(
 
 
 /* =========================================================
-   SWIPE
+   MOBILE SWIPE
 ========================================================= */
 
 let touchStartX = 0;
-
 let touchStartY = 0;
 
 
@@ -2307,37 +2028,19 @@ canvas.addEventListener(
             Math.abs(dy)
         ) {
 
-            if (
+            pacman.nextDirection =
                 dx > 0
-            ) {
-
-                pacman.nextDirection =
-                    "right";
-
-            } else {
-
-                pacman.nextDirection =
-                    "left";
-
-            }
+                    ? "right"
+                    : "left";
 
         }
 
         else {
 
-            if (
+            pacman.nextDirection =
                 dy > 0
-            ) {
-
-                pacman.nextDirection =
-                    "down";
-
-            } else {
-
-                pacman.nextDirection =
-                    "up";
-
-            }
+                    ? "down"
+                    : "up";
 
         }
 
@@ -2358,34 +2061,33 @@ const mapButtons =
     );
 
 
-mapButtons.forEach(
-    button => {
+mapButtons.forEach(button => {
 
-        button.addEventListener(
-            "click",
-            () => {
+    button.addEventListener(
+        "click",
+        () => {
 
-                mapButtons.forEach(
-                    other =>
-                        other.classList.remove(
-                            "selected"
-                        )
-                );
+            mapButtons.forEach(other => {
 
-
-                button.classList.add(
+                other.classList.remove(
                     "selected"
                 );
 
+            });
 
-                selectedMap =
-                    button.dataset.map;
 
-            }
-        );
+            button.classList.add(
+                "selected"
+            );
 
-    }
-);
+
+            selectedMap =
+                button.dataset.map;
+
+        }
+    );
+
+});
 
 
 /* =========================================================
@@ -2417,7 +2119,7 @@ restartButton.addEventListener(
 
 
 /* =========================================================
-   RETURN TO MAPS
+   MAP BUTTON
 ========================================================= */
 
 mapButton.addEventListener(
@@ -2437,7 +2139,7 @@ mapButton.addEventListener(
 
 
 /* =========================================================
-   PREVIEW MAPS
+   MAP PREVIEWS
 ========================================================= */
 
 function drawPreview(
@@ -2446,9 +2148,7 @@ function drawPreview(
 ) {
 
     const previewContext =
-        previewCanvas.getContext(
-            "2d"
-        );
+        previewCanvas.getContext("2d");
 
 
     const width =
@@ -2469,12 +2169,8 @@ function drawPreview(
     );
 
 
-    const cols = 31;
-
-    const rows = 17;
-
     const tile =
-        width / cols;
+        width / COLS;
 
 
     const oldMaze =
@@ -2493,13 +2189,13 @@ function drawPreview(
 
     for (
         let y = 0;
-        y < rows;
+        y < ROWS;
         y++
     ) {
 
         for (
             let x = 0;
-            x < cols;
+            x < COLS;
             x++
         ) {
 
@@ -2521,47 +2217,37 @@ function drawPreview(
     }
 
 
-    /* Pellets */
-
     previewContext.fillStyle =
         "#ffe9a8";
 
 
-    pellets.forEach(
-        key => {
+    pellets.forEach(key => {
 
-            const [
-                x,
-                y
-            ] =
-                key
-                .split(",")
-                .map(Number);
-
-
-            previewContext.beginPath();
-
-            previewContext.arc(
-                x * tile +
-                tile / 2,
-
-                y * tile +
-                tile / 2,
-
-                1.2,
-
-                0,
-                Math.PI * 2
-            );
-
-            previewContext.fill();
-
-        }
-    );
+        const [
+            x,
+            y
+        ] =
+            key
+            .split(",")
+            .map(Number);
 
 
-    maze =
-        oldMaze;
+        previewContext.beginPath();
+
+        previewContext.arc(
+            x * tile + tile / 2,
+            y * tile + tile / 2,
+            1.2,
+            0,
+            Math.PI * 2
+        );
+
+        previewContext.fill();
+
+    });
+
+
+    maze = oldMaze;
 
 }
 
@@ -2571,28 +2257,22 @@ function drawPreview(
 ========================================================= */
 
 document
-    .querySelectorAll(
-        ".preview"
-    )
-    .forEach(
-        preview => {
+    .querySelectorAll(".preview")
+    .forEach(preview => {
 
-            drawPreview(
-                preview,
-                preview.dataset.preview
-            );
+        drawPreview(
+            preview,
+            preview.dataset.preview
+        );
 
-        }
-    );
+    });
 
 
 /* =========================================================
-   INITIAL DRAW
+   INITIALISE
 ========================================================= */
 
-createMap(
-    selectedMap
-);
+createMap(selectedMap);
 
 resetCharacters();
 
