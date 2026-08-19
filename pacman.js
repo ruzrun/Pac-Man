@@ -1547,12 +1547,12 @@ function drawMaze() {
 
     ctx.strokeStyle = "#ff8bd8";
 
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 1;
 
     ctx.beginPath();
 
     ctx.moveTo(
-        15 * TILE,
+        18 * TILE,
         10 * TILE
     );
 
